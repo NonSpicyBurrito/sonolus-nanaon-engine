@@ -1,0 +1,164 @@
+[
+    {
+        "name": "#AUTO",
+        "standard": true,
+        "type": "toggle",
+        "def": 0
+    },
+    {
+        "name": "#OFFSET_AUDIO",
+        "type": "slider",
+        "def": 0,
+        "min": -500,
+        "max": 500,
+        "step": 1,
+        "display": "number"
+    },
+    {
+        "name": "#OFFSET_INPUT",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 0,
+        "min": -500,
+        "max": 500,
+        "step": 1,
+        "display": "number"
+    },
+    {
+        "name": "#SPEED",
+        "standard": true,
+        "type": "slider",
+        "def": 1,
+        "min": 0.5,
+        "max": 1.5,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#NOTE_SPEED",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 5,
+        "min": 1,
+        "max": 11,
+        "step": 0.1,
+        "display": "number"
+    },
+    {
+        "name": "#NOTE_SIZE",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 1,
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#CONNECTOR_ALPHA",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 0.8,
+        "min": 0.1,
+        "max": 1,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#STAGE_COVER_VERTICAL",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 0,
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#MIRROR",
+        "type": "toggle",
+        "def": 0
+    },
+    {
+        "name": "#SIMLINE",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 1
+    },
+    {
+        "name": "#EFFECT",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 1
+    },
+    {
+        "name": "#NOTE_EFFECT",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 1
+    },
+    {
+        "name": "#LANE_EFFECT",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 0
+    },
+    {
+        "name": "#SLOT_EFFECT",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 0
+    },
+    {
+        "name": "#STAGE_TILT",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 1
+    },
+    {
+        "name": "#STAGE_ASPECTRATIO_LOCK",
+        "scope": "Nanaon",
+        "type": "toggle",
+        "def": 1
+    },
+    {
+        "name": "#UI_JUDGMENT_SIZE",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 1,
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#UI_JUDGMENT_ALPHA",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 1,
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#UI_COMBO_SIZE",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 1,
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05,
+        "display": "percentage"
+    },
+    {
+        "name": "#UI_COMBO_ALPHA",
+        "scope": "Nanaon",
+        "type": "slider",
+        "def": 1,
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "display": "percentage"
+    }
+]
