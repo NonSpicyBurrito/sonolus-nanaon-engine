@@ -1,6 +1,6 @@
 //
 // Nanaon Engine
-// For Sonolus 0.3.6
+// For Sonolus 0.4.1
 //
 // A recreation of 22/7 Music Time engine
 // By Burrito
@@ -26,7 +26,7 @@ InitNoteTail:Execute(
 InitSimLine:And(
     SimLine
     NoteSimLineIndex
-    Spawn(10 Index NoteSimLineIndex)
+    Spawn(7 Index NoteSimLineIndex)
 )
 
 InitAutoNormal:And(
@@ -186,63 +186,60 @@ DrawNoteSlide:And(
 
 PlayTapEffect:And(
     NoteEffect
-    Spawn(
-        7
-        Time
-        NoteTailX
-        NoteEffectCB
-        NoteEffectCF
-        NoteEffectLB
-        NoteEffectLF
+    Execute(
+        SpawnParticleEffect(
+            ParticleEffectTapNormalL
+            Subtract(NoteTailX HalfNoteWidth) LaneY1
+            Subtract(NoteTailX HalfNoteWidth) TapEffectLY2
+            Add(NoteTailX HalfNoteWidth) TapEffectLY2
+            Add(NoteTailX HalfNoteWidth) LaneY1
+            0.4
+            0
+        )
+        SpawnParticleEffect(
+            ParticleEffectTapNormalC
+            Subtract(NoteTailX HalfTapEffectCWidth) TapEffectCY1
+            Subtract(NoteTailX HalfTapEffectCWidth) TapEffectCY2
+            Add(NoteTailX HalfTapEffectCWidth) TapEffectCY2
+            Add(NoteTailX HalfTapEffectCWidth) TapEffectCY1
+            0.6
+            0
+        )
     )
 )
-PlayAutoTapEffect:And(
-    NoteEffect
-    Spawn(
-        7
-        NoteTailTime
-        NoteTailX
-        NoteEffectCB
-        NoteEffectCF
-        NoteEffectLB
-        NoteEffectLF
-    )
-)
-
 PlayFlickEffect:And(
     NoteEffect
-    Spawn(
-        8
-        Time
-        NoteTailX
-        NoteEffectCB
-        NoteEffectCF
-        NoteEffectLB
-        NoteEffectLF
+    Execute(
+        SpawnParticleEffect(
+            ParticleEffectTapFlickL
+            Subtract(NoteTailX HalfNoteWidth) LaneY1
+            Subtract(NoteTailX HalfNoteWidth) TapEffectLY2
+            Add(NoteTailX HalfNoteWidth) TapEffectLY2
+            Add(NoteTailX HalfNoteWidth) LaneY1
+            0.4
+            0
+        )
+        SpawnParticleEffect(
+            ParticleEffectTapFlickC
+            Subtract(NoteTailX HalfTapEffectCWidth) TapEffectCY1
+            Subtract(NoteTailX HalfTapEffectCWidth) TapEffectCY2
+            Add(NoteTailX HalfTapEffectCWidth) TapEffectCY2
+            Add(NoteTailX HalfTapEffectCWidth) TapEffectCY1
+            0.6
+            0
+        )
     )
 )
-PlayAutoFlickEffect:And(
-    NoteEffect
-    Spawn(
-        8
-        NoteTailTime
-        NoteTailX
-        NoteEffectCB
-        NoteEffectCF
-        NoteEffectLB
-        NoteEffectLF
-    )
-)
-
 PlayAutoLaneEffect:And(
     LaneEffect
-    Spawn(
-        11
-        Time
-        GetShifted(LevelMemory *LaneBX Add(NoteTailLane 2))
-        GetShifted(LevelMemory *LaneTX Add(NoteTailLane 2))
-        GetShifted(LevelMemory *LaneTX Add(NoteTailLane 3))
-        GetShifted(LevelMemory *LaneBX Add(NoteTailLane 3))
+    SpawnParticleEffect(
+        ParticleEffectLaneL
+        GetShifted(LevelMemory *LaneBX Add(NoteTailLane 2)) LaneY1
+        GetShifted(LevelMemory *LaneTX Add(NoteTailLane 2)) LaneY2
+        GetShifted(LevelMemory *LaneTX Add(NoteTailLane 3)) LaneY2
+        GetShifted(LevelMemory *LaneBX Add(NoteTailLane 3)) LaneY1
+        0.2
+        0
     )
 )
 
@@ -250,83 +247,13 @@ PlayJudgmentSound:And(
     SoundEffect
     Play(Judgment MinEffectTime)
 )
-
 PlayFlickSound:And(
     SoundEffect
     Play(EffectFlick MinEffectTime)
 )
-
 PlayEmptySound:And(
     SoundEffect
     Play(EffectEmpty MinEffectTime)
-)
-
-
-
-// Effect Class
-
-UpdateEffectTimeDistance:Set(EntityMemory *EffectTimeDistance Subtract(Time EffectTime))
-
-InitEffect:Execute(
-    Set(EntityMemory *EffectLX1 Subtract(EffectX Multiply(0.475 LaneWidth)))
-    Set(EntityMemory *EffectLX2 Subtract(EffectX Multiply(0.25 LaneWidth)))
-    Set(EntityMemory *EffectLX3 Add(EffectX Multiply(0.25 LaneWidth)))
-    Set(EntityMemory *EffectLX4 Add(EffectX Multiply(0.475 LaneWidth)))
-)
-
-DrawEffectC:Execute(
-    Set(EntityMemory *EffectAlpha Divide(Subtract(1 EaseInCubic(Divide(EffectTimeDistance 0.6))) 2))
-
-    Set(EntityMemory *HalfEffectWidth Multiply(HalfNoteWidth 2 EaseOutCubic(Divide(EffectTimeDistance 0.6))))
-    Set(EntityMemory *HalfEffectHeight Multiply(0.7 HalfEffectWidth))
-
-    Set(EntityMemory *EffectCX1 Subtract(EffectX HalfEffectWidth))
-    Set(EntityMemory *EffectCX2 Add(EffectX HalfEffectWidth))
-    Set(EntityMemory *EffectCY1 Subtract(LaneY1 HalfEffectHeight))
-    Set(EntityMemory *EffectCY2 Add(LaneY1 HalfEffectHeight))
-
-    Draw(
-        EffectCB
-        EffectCX1 EffectCY1
-        EffectCX1 EffectCY2
-        EffectCX2 EffectCY2
-        EffectCX2 EffectCY1
-        LayerEffectCB
-        EffectAlpha
-    )
-    Draw(
-        EffectCF
-        EffectCX1 EffectCY1
-        EffectCX1 EffectCY2
-        EffectCX2 EffectCY2
-        EffectCX2 EffectCY1
-        LayerEffectCF
-        EffectAlpha
-    )
-)
-
-DrawEffectL:Execute(
-    Set(EntityMemory *EffectAlpha Divide(Subtract(1 EaseInOutCubic(Divide(EffectTimeDistance 0.6))) 2))
-    Set(EntityMemory *EffectLY2 Add(LaneY1 Multiply(LaneWidth 2 EaseOutCubic(Divide(EffectTimeDistance 0.6)))))
-
-    Draw(
-        EffectLF
-        EffectLX1 LaneY1
-        EffectLX1 EffectLY2
-        EffectLX4 EffectLY2
-        EffectLX4 LaneY1
-        LayerEffectLF
-        EffectAlpha
-    )
-    Draw(
-        EffectLB
-        EffectLX1 LaneY1
-        EffectLX2 EffectLY1
-        EffectLX3 EffectLY1
-        EffectLX4 LaneY1
-        LayerEffectLB
-        EffectAlpha
-    )
 )
 
 
@@ -362,6 +289,10 @@ DrawEffectL:Execute(
     Set(LevelMemory *HalfNoteWidth Divide(NoteWidth 2))
     Set(LevelMemory *NoteBaseY1 Subtract(1 Divide(NoteHeight LaneYMultiplier)))
     Set(LevelMemory *NoteBaseY2 Add(1 Divide(NoteHeight LaneYMultiplier)))
+    Set(LevelMemory *TapEffectLY2 Add(LaneY1 Multiply(2 HalfNoteWidth)))
+    Set(LevelMemory *HalfTapEffectCWidth Multiply(HalfNoteWidth 1.5))
+    Set(LevelMemory *TapEffectCY1 Subtract(LaneY1 Multiply(HalfNoteWidth 0.8)))
+    Set(LevelMemory *TapEffectCY2 Add(LaneY1 Multiply(HalfNoteWidth 0.8)))
     Set(LevelMemory *NoteScreenTime Divide(Subtract(12 NoteSpeed) 2))
     Set(LevelMemory *NoteTimeOffset Divide(LevelAudioOffset 1000))
     Set(LevelMemory *MirrorMultiplier If(Mirror -1 1))
@@ -535,23 +466,28 @@ DrawEffectL:Execute(
                                 PlayEmptySound
                                 And(
                                     SlotEffect
-                                    Spawn(
-                                        9
-                                        Time
-                                        Subtract(Looper 2)
+                                    SpawnParticleEffect(
+                                        ParticleEffectSlotL
+                                        Subtract(Multiply(Subtract(Looper 2) LaneWidth) HalfNoteWidth) LaneY1
+                                        Subtract(Multiply(Subtract(Looper 2) LaneWidth) HalfNoteWidth) TapEffectLY2
+                                        Add(Multiply(Subtract(Looper 2) LaneWidth) HalfNoteWidth) TapEffectLY2
+                                        Add(Multiply(Subtract(Looper 2) LaneWidth) HalfNoteWidth) LaneY1
+                                        0.6
+                                        0
                                     )
                                 )
                             )
                         )
                         And(
                             LaneEffect
-                            Spawn(
-                                11
-                                Time
-                                GetShifted(LevelMemory *LaneBX Looper)
-                                GetShifted(LevelMemory *LaneTX Looper)
-                                GetShifted(LevelMemory *LaneTX Add(Looper 1))
-                                GetShifted(LevelMemory *LaneBX Add(Looper 1))
+                            SpawnParticleEffect(
+                                ParticleEffectLaneL
+                                GetShifted(LevelMemory *LaneBX Looper) LaneY1
+                                GetShifted(LevelMemory *LaneTX Looper) LaneY2
+                                GetShifted(LevelMemory *LaneTX Add(Looper 1)) LaneY2
+                                GetShifted(LevelMemory *LaneBX Add(Looper 1)) LaneY1
+                                0.2
+                                0
                             )
                         )
                     )
@@ -604,7 +540,7 @@ DrawEffectL:Execute(
             Auto
             GreaterOr(Time NoteTailTime)
             Execute(
-                PlayAutoTapEffect
+                PlayTapEffect
                 PlayAutoLaneEffect
                 true
             )
@@ -679,7 +615,7 @@ DrawEffectL:Execute(
             Auto
             GreaterOr(Time NoteTailTime)
             Execute(
-                PlayAutoFlickEffect
+                PlayFlickEffect
                 PlayAutoLaneEffect
                 true
             )
@@ -746,7 +682,7 @@ DrawEffectL:Execute(
             Auto
             GreaterOr(Time NoteTailTime)
             Execute(
-                PlayAutoTapEffect
+                PlayTapEffect
                 PlayAutoLaneEffect
                 true
             )
@@ -822,7 +758,7 @@ DrawEffectL:Execute(
             Auto
             GreaterOr(Time NoteTailTime)
             Execute(
-                PlayAutoTapEffect
+                PlayTapEffect
                 PlayAutoLaneEffect
                 true
             )
@@ -903,7 +839,7 @@ DrawEffectL:Execute(
             Auto
             GreaterOr(Time NoteTailTime)
             Execute(
-                PlayAutoTapEffect
+                PlayTapEffect
                 PlayAutoLaneEffect
                 true
             )
@@ -931,98 +867,15 @@ DrawEffectL:Execute(
 
 
 
-// #7: Tap Effect
+// #7: Sim Line
 
 #7.initialize:Execute(
-    InitEffect
-    Set(EntityMemory *EffectLY1 Add(LaneY1 Multiply(1.5 LaneWidth)))
-)
-
-#7.updateParallel:Execute(
-    UpdateEffectTimeDistance
-    Or(
-        GreaterOr(EffectTimeDistance 0.6)
-        Execute(
-            DrawEffectC
-            DrawEffectL
-        )
-    )
-)
-
-
-
-// #8: Flick Effect
-
-#8.initialize:Execute(
-    InitEffect
-    Set(EntityMemory *EffectLY1 Add(LaneY1 Multiply(2.5 LaneWidth)))
-)
-
-#8.updateParallel:Execute(
-    UpdateEffectTimeDistance
-    Or(
-        GreaterOr(EffectTimeDistance 0.6)
-        Execute(
-            DrawEffectC
-            DrawEffectL
-        )
-    )
-)
-
-
-
-// #9: Empty Tap Effect
-
-#9.initialize:Execute(
-    Set(EntityMemory *EffectLX1 Multiply(Subtract(EffectX 0.475) LaneWidth))
-    Set(EntityMemory *EffectLX2 Multiply(Subtract(EffectX 0.4) LaneWidth))
-    Set(EntityMemory *EffectLX3 Multiply(Add(EffectX 0.4) LaneWidth))
-    Set(EntityMemory *EffectLX4 Multiply(Add(EffectX 0.475) LaneWidth))
-    Set(EntityMemory *EffectLY1 Add(LaneY1 Multiply(0.5 LaneWidth)))
-)
-
-#9.updateParallel:Execute(
-    UpdateEffectTimeDistance
-    Or(
-        GreaterOr(EffectTimeDistance 0.6)
-        Execute(
-            Set(EntityMemory *EffectAlpha Divide(Subtract(1 EaseInOutCubic(Divide(EffectTimeDistance 0.6))) 2))
-            Set(EntityMemory *EffectLY2 Add(LaneY1 Multiply(LaneWidth EaseOutCubic(Divide(EffectTimeDistance 0.6)))))
-
-            Draw(
-                TextureEffectLF
-                EffectLX1 LaneY1
-                EffectLX1 EffectLY2
-                EffectLX4 EffectLY2
-                EffectLX4 LaneY1
-                LayerEffectLF
-                EffectAlpha
-            )
-
-            Draw(
-                TextureEffectLB
-                EffectLX1 LaneY1
-                EffectLX2 EffectLY1
-                EffectLX3 EffectLY1
-                EffectLX4 LaneY1
-                LayerEffectLB
-                EffectAlpha
-            )
-        )
-    )
-)
-
-
-
-// #10: Sim Line
-
-#10.initialize:Execute(
     Set(EntityMemory *SimLineTime SimLineTime1)
     Set(EntityMemory *SimLineX1 Multiply(Subtract(SimLineLane1 0.5) LaneWidth))
     Set(EntityMemory *SimLineX2 Multiply(Add(SimLineLane2 0.5) LaneWidth))
 )
 
-#10.updateParallel:Or(
+#7.updateParallel:Or(
     And(
         Auto
         GreaterOr(Time SimLineTime)
@@ -1047,26 +900,6 @@ DrawEffectL:Execute(
                 LayerSimLine
                 1
             )
-        )
-    )
-)
-
-
-
-// #11: Lane Effect
-
-#11.updateParallel:Execute(
-    UpdateEffectTimeDistance
-    Or(
-        GreaterOr(EffectTimeDistance 0.2)
-        Draw(
-            TextureEffectLB
-            LaneEffectX1 LaneY1
-            LaneEffectX2 LaneY2
-            LaneEffectX3 LaneY2
-            LaneEffectX4 LaneY1
-            LayerLaneEffect
-            Subtract(1 Divide(EffectTimeDistance 0.2))
         )
     )
 )
@@ -1149,6 +982,17 @@ EffectEmpty:5
 
 
 
+// Particle Effect identifiers
+
+ParticleEffectTapNormalL:120006
+ParticleEffectTapNormalC:110006
+ParticleEffectTapFlickL:121002
+ParticleEffectTapFlickC:111002
+ParticleEffectLaneL:320000
+ParticleEffectSlotL:420000
+
+
+
 // Block identifiers
 
 LevelMemory:0
@@ -1187,13 +1031,17 @@ TemporaryData:101
 *HalfNoteWidth:9
 *NoteBaseY1:10
 *NoteBaseY2:11
-*NoteScreenTime:12
-*NoteTimeOffset:13
-*MirrorMultiplier:14
-*Tilt:15
-*InputOffset:16
-*LaneBX:17
-*LaneTX:23
+*TapEffectLY2:12
+*HalfTapEffectCWidth:13
+*TapEffectCY1:14
+*TapEffectCY2:15
+*NoteScreenTime:16
+*NoteTimeOffset:17
+*MirrorMultiplier:18
+*Tilt:19
+*InputOffset:20
+*LaneBX:21
+*LaneTX:27
 
 StageWidth:Get(LevelMemory *StageWidth)
 StageHeight:Get(LevelMemory *StageHeight)
@@ -1207,6 +1055,10 @@ NoteHeight:Get(LevelMemory *NoteHeight)
 HalfNoteWidth:Get(LevelMemory *HalfNoteWidth)
 NoteBaseY1:Get(LevelMemory *NoteBaseY1)
 NoteBaseY2:Get(LevelMemory *NoteBaseY2)
+TapEffectLY2:Get(LevelMemory *TapEffectLY2)
+HalfTapEffectCWidth:Get(LevelMemory *HalfTapEffectCWidth)
+TapEffectCY1:Get(LevelMemory *TapEffectCY1)
+TapEffectCY2:Get(LevelMemory *TapEffectCY2)
 NoteScreenTime:Get(LevelMemory *NoteScreenTime)
 NoteTimeOffset:Get(LevelMemory *NoteTimeOffset)
 MirrorMultiplier:Get(LevelMemory *MirrorMultiplier)
@@ -1467,10 +1319,6 @@ NoteHeadInputTouchID:GetShifted(EntitySharedMemoryArray NoteHeadSharedMemoryOffs
 *NoteSimLineIndex:3
 *NoteBucket:4
 *NoteTexture:5
-*NoteEffectCB:6
-*NoteEffectCF:7
-*NoteEffectLB:8
-*NoteEffectLF:9
 
 NoteHeadIndex:Get(EntityData *NoteHeadIndex)
 NoteTailTime:Divide(Add(Get(EntityData *NoteTailTime) NoteTimeOffset) Speed)
@@ -1478,10 +1326,6 @@ NoteTailLane:Multiply(Get(EntityData *NoteTailLane) MirrorMultiplier)
 NoteSimLineIndex:Get(EntityData *NoteSimLineIndex)
 NoteBucket:Get(EntityData *NoteBucket)
 NoteTexture:Get(EntityData *NoteTexture)
-NoteEffectCB:Get(EntityData *NoteEffectCB)
-NoteEffectCF:Get(EntityData *NoteEffectCF)
-NoteEffectLB:Get(EntityData *NoteEffectLB)
-NoteEffectLF:Get(EntityData *NoteEffectLF)
 
 NoteHeadInfoOffset:Multiply(NoteHeadIndex 3)
 NoteHeadDataOffset:Multiply(NoteHeadIndex 32)
@@ -1497,59 +1341,7 @@ SimLineLane2:Multiply(GetShifted(EntityDataArray SimLineDataOffset2 *NoteTailLan
 
 
 
-// Effect Class Memory Layout
-
-*EffectTimeDistance:32
-*EffectLX1:33
-*EffectLX2:34
-*EffectLX3:35
-*EffectLX4:36
-*EffectLY1:37
-*EffectLY2:38
-*HalfEffectWidth:39
-*HalfEffectHeight:40
-*EffectAlpha:41
-*EffectCX1:42
-*EffectCX2:43
-*EffectCY1:44
-*EffectCY2:45
-
-EffectTimeDistance:Get(EntityMemory *EffectTimeDistance)
-EffectLX1:Get(EntityMemory *EffectLX1)
-EffectLX2:Get(EntityMemory *EffectLX2)
-EffectLX3:Get(EntityMemory *EffectLX3)
-EffectLX4:Get(EntityMemory *EffectLX4)
-EffectLY1:Get(EntityMemory *EffectLY1)
-EffectLY2:Get(EntityMemory *EffectLY2)
-HalfEffectWidth:Get(EntityMemory *HalfEffectWidth)
-HalfEffectHeight:Get(EntityMemory *HalfEffectHeight)
-EffectAlpha:Get(EntityMemory *EffectAlpha)
-EffectCX1:Get(EntityMemory *EffectCX1)
-EffectCX2:Get(EntityMemory *EffectCX2)
-EffectCY1:Get(EntityMemory *EffectCY1)
-EffectCY2:Get(EntityMemory *EffectCY2)
-
-
-
-// #7, #8, #11 Memory Layout
-
-*EffectTime:0
-*EffectX:1
-*EffectCB:2
-*EffectCF:3
-*EffectLB:4
-*EffectLF:5
-
-EffectTime:Get(EntityMemory *EffectTime)
-EffectX:Get(EntityMemory *EffectX)
-EffectCB:Get(EntityMemory *EffectCB)
-EffectCF:Get(EntityMemory *EffectCF)
-EffectLB:Get(EntityMemory *EffectLB)
-EffectLF:Get(EntityMemory *EffectLF)
-
-
-
-// #10 Memory Layout
+// #7 Memory Layout
 
 *SimLineIndex1:0
 *SimLineIndex2:1
@@ -1579,17 +1371,3 @@ SimLineInfoOffset1:Multiply(SimLineIndex1 3)
 SimLineInfoOffset2:Multiply(SimLineIndex2 3)
 SimLineDataOffset1:Multiply(SimLineIndex1 32)
 SimLineDataOffset2:Multiply(SimLineIndex2 32)
-
-
-
-// #11 Memory Layout
-
-*LaneEffectX1:1
-*LaneEffectX2:2
-*LaneEffectX3:3
-*LaneEffectX4:4
-
-LaneEffectX1:Get(EntityMemory *LaneEffectX1)
-LaneEffectX2:Get(EntityMemory *LaneEffectX2)
-LaneEffectX3:Get(EntityMemory *LaneEffectX3)
-LaneEffectX4:Get(EntityMemory *LaneEffectX4)
