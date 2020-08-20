@@ -260,52 +260,26 @@ PlayEmptySound:And(
 
 // #0: Initialization
 
-#0.updateSequential:Execute(
+StageWidth:If(
+    StageAspectRatioLock
     If(
-        StageAspectRatioLock
-        If(
-            GreaterOr(AspectRatio 1.77778)
-            Execute(
-                Set(LevelMemory *StageWidth 3.55556)
-                Set(LevelMemory *StageHeight 2)
-            )
-            Execute(
-                Set(LevelMemory *StageWidth Multiply(AspectRatio 2))
-                Set(LevelMemory *StageHeight Divide(AspectRatio 0.5 1.77778))
-            )
-        )
-        Execute(
-            Set(LevelMemory *StageWidth Multiply(AspectRatio 2))
-            Set(LevelMemory *StageHeight 2)
-        )
+        GreaterOr(AspectRatio 1.77778)
+        3.55556
+        Multiply(AspectRatio 2)
     )
-    Set(LevelMemory *LaneWidth Divide(StageWidth 2 3.05))
-    Set(LevelMemory *LaneYOffset Divide(StageHeight 2))
-    Set(LevelMemory *LaneYMultiplier Multiply(StageHeight -0.825))
-    Set(LevelMemory *LaneY1 Add(LaneYOffset LaneYMultiplier))
-    Set(LevelMemory *LaneY2 Add(LaneYOffset Multiply(LaneYMultiplier 0.1)))
-    Set(LevelMemory *NoteWidth Multiply(NoteSize LaneWidth 0.95))
-    Set(LevelMemory *NoteHeight Multiply(NoteSize 0.5 StageHeight 0.125))
-    Set(LevelMemory *HalfNoteWidth Divide(NoteWidth 2))
-    Set(LevelMemory *NoteBaseY1 Subtract(1 Divide(NoteHeight LaneYMultiplier)))
-    Set(LevelMemory *NoteBaseY2 Add(1 Divide(NoteHeight LaneYMultiplier)))
-    Set(LevelMemory *TapEffectLY2 Add(LaneY1 Multiply(2 HalfNoteWidth)))
-    Set(LevelMemory *HalfTapEffectCWidth Multiply(HalfNoteWidth 1.5))
-    Set(LevelMemory *TapEffectCY1 Subtract(LaneY1 Multiply(HalfNoteWidth 0.8)))
-    Set(LevelMemory *TapEffectCY2 Add(LaneY1 Multiply(HalfNoteWidth 0.8)))
-    Set(LevelMemory *NoteScreenTime Divide(Subtract(12 NoteSpeed) 2))
-    Set(LevelMemory *NoteTimeOffset Divide(LevelAudioOffset 1000))
-    Set(LevelMemory *MirrorMultiplier If(Mirror -1 1))
-    Set(LevelMemory *InputOffset Add(DeviceInputOffset Divide(LevelInputOffset 1000)))
-
-    Set(EntityMemory *Looper 0)
-    While(
-        Less(Looper 6)
-        SetShifted(LevelMemory *LaneBX Looper Multiply(LaneWidth Subtract(Looper 2.5)))
-        SetShifted(LevelMemory *LaneTX Looper Multiply(0.1 GetShifted(LevelMemory *LaneBX Looper)))
-        Set(EntityMemory *Looper Add(Looper 1))
+    Multiply(AspectRatio 2)
+)
+StageHeight:If(
+    StageAspectRatioLock
+    If(
+        GreaterOr(AspectRatio 1.77778)
+        2
+        Divide(AspectRatio 0.5 1.77778)
     )
+    2
+)
 
+#0.preprocess:Execute(
     SetShifted(LevelUI *UIMenu *UIAnchorX Subtract(AspectRatio 0.05))
     SetShifted(LevelUI *UIMenu *UIAnchorY 0.95)
     SetShifted(LevelUI *UIMenu *UIPivotX 1)
@@ -357,6 +331,35 @@ PlayEmptySound:And(
     SetShifted(LevelUI *UIScoreValue *UIHeight 0.15)
     SetShifted(LevelUI *UIScoreValue *UIAlpha 1)
     SetShifted(LevelUI *UIScoreValue *UIHorizontalAlign 1)
+)
+
+#0.updateSequential:Execute(
+    Set(LevelMemory *LaneWidth Divide(StageWidth 2 3.05))
+    Set(LevelMemory *LaneYOffset Divide(StageHeight 2))
+    Set(LevelMemory *LaneYMultiplier Multiply(StageHeight -0.825))
+    Set(LevelMemory *LaneY1 Add(LaneYOffset LaneYMultiplier))
+    Set(LevelMemory *LaneY2 Add(LaneYOffset Multiply(LaneYMultiplier 0.1)))
+    Set(LevelMemory *NoteWidth Multiply(NoteSize LaneWidth 0.95))
+    Set(LevelMemory *NoteHeight Multiply(NoteSize 0.5 StageHeight 0.125))
+    Set(LevelMemory *HalfNoteWidth Divide(NoteWidth 2))
+    Set(LevelMemory *NoteBaseY1 Subtract(1 Divide(NoteHeight LaneYMultiplier)))
+    Set(LevelMemory *NoteBaseY2 Add(1 Divide(NoteHeight LaneYMultiplier)))
+    Set(LevelMemory *TapEffectLY2 Add(LaneY1 Multiply(2 HalfNoteWidth)))
+    Set(LevelMemory *HalfTapEffectCWidth Multiply(HalfNoteWidth 1.5))
+    Set(LevelMemory *TapEffectCY1 Subtract(LaneY1 Multiply(HalfNoteWidth 0.8)))
+    Set(LevelMemory *TapEffectCY2 Add(LaneY1 Multiply(HalfNoteWidth 0.8)))
+    Set(LevelMemory *NoteScreenTime Divide(Subtract(12 NoteSpeed) 2))
+    Set(LevelMemory *NoteTimeOffset Divide(LevelAudioOffset 1000))
+    Set(LevelMemory *MirrorMultiplier If(Mirror -1 1))
+    Set(LevelMemory *InputOffset Add(DeviceInputOffset Divide(LevelInputOffset 1000)))
+
+    Set(EntityMemory *Looper 0)
+    While(
+        Less(Looper 6)
+        SetShifted(LevelMemory *LaneBX Looper Multiply(LaneWidth Subtract(Looper 2.5)))
+        SetShifted(LevelMemory *LaneTX Looper Multiply(0.1 GetShifted(LevelMemory *LaneBX Looper)))
+        Set(EntityMemory *Looper Add(Looper 1))
+    )
 
     true
 )
@@ -1019,8 +1022,6 @@ TemporaryData:101
 
 // Level Memory Layout
 
-*StageWidth:0
-*StageHeight:1
 *LaneWidth:2
 *LaneYOffset:3
 *LaneYMultiplier:4
@@ -1043,8 +1044,6 @@ TemporaryData:101
 *LaneBX:21
 *LaneTX:27
 
-StageWidth:Get(LevelMemory *StageWidth)
-StageHeight:Get(LevelMemory *StageHeight)
 LaneWidth:Get(LevelMemory *LaneWidth)
 LaneYOffset:Get(LevelMemory *LaneYOffset)
 LaneYMultiplier:Get(LevelMemory *LaneYMultiplier)
