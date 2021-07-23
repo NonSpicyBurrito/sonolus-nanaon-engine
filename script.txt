@@ -399,9 +399,7 @@ StageHeight:If(
     Set(LevelMemory *TapEffectCY1 Subtract(LaneY1 Multiply(HalfNoteWidth 0.8)))
     Set(LevelMemory *TapEffectCY2 Add(LaneY1 Multiply(HalfNoteWidth 0.8)))
     Set(LevelMemory *NoteScreenTime Divide(Subtract(12 NoteSpeed) 2))
-    Set(LevelMemory *NoteTimeOffset Divide(LevelAudioOffset 1000))
     Set(LevelMemory *MirrorMultiplier If(Mirror -1 1))
-    Set(LevelMemory *InputOffset Add(DeviceInputOffset Divide(LevelInputOffset 1000)))
 
     Set(EntityMemory *Looper 0)
     While(
@@ -1092,12 +1090,10 @@ TemporaryData:101
 *TapEffectCY1:14
 *TapEffectCY2:15
 *NoteScreenTime:16
-*NoteTimeOffset:17
-*MirrorMultiplier:18
-*Tilt:19
-*InputOffset:20
-*LaneBX:21
-*LaneTX:27
+*MirrorMultiplier:17
+*Tilt:18
+*LaneBX:19
+*LaneTX:25
 
 LaneWidth:Get(LevelMemory *LaneWidth)
 LaneYOffset:Get(LevelMemory *LaneYOffset)
@@ -1114,10 +1110,8 @@ HalfTapEffectCWidth:Get(LevelMemory *HalfTapEffectCWidth)
 TapEffectCY1:Get(LevelMemory *TapEffectCY1)
 TapEffectCY2:Get(LevelMemory *TapEffectCY2)
 NoteScreenTime:Get(LevelMemory *NoteScreenTime)
-NoteTimeOffset:Get(LevelMemory *NoteTimeOffset)
 MirrorMultiplier:Get(LevelMemory *MirrorMultiplier)
 Tilt:Get(LevelMemory *Tilt)
-InputOffset:Get(LevelMemory *InputOffset)
 
 
 
@@ -1126,43 +1120,39 @@ InputOffset:Get(LevelMemory *InputOffset)
 *Time:0
 *DeltaTime:1
 *AspectRatio:2
-*DeviceAudioOffset:3
-*DeviceInputOffset:4
+*AudioOffset:3
+*InputOffset:4
 
 Time:Get(LevelData *Time)
 DeltaTime:Get(LevelData *DeltaTime)
 AspectRatio:Get(LevelData *AspectRatio)
-DeviceAudioOffset:Get(LevelData *DeviceAudioOffset)
-DeviceInputOffset:Get(LevelData *DeviceInputOffset)
+AudioOffset:Get(LevelData *AudioOffset)
+InputOffset:Get(LevelData *InputOffset)
 
 
 
 // Level Option Layout
 
 *Auto:0
-*LevelAudioOffset:1
-*LevelInputOffset:2
-*Speed:3
-*NoteSpeed:4
-*NoteSize:5
-*ConnectorAlpha:6
-*StageCover:7
-*Mirror:8
-*SimLine:9
-*SoundEffect:10
-*NoteEffect:11
-*LaneEffect:12
-*SlotEffect:13
-*StageTilt:14
-*StageAspectRatioLock:15
-*UIJudgmentSize:16
-*UIJudgmentAlpha:17
-*UIComboSize:18
-*UIComboAlpha:19
+*Speed:1
+*NoteSpeed:2
+*NoteSize:3
+*ConnectorAlpha:4
+*StageCover:5
+*Mirror:6
+*SimLine:7
+*SoundEffect:8
+*NoteEffect:9
+*LaneEffect:10
+*SlotEffect:11
+*StageTilt:12
+*StageAspectRatioLock:13
+*UIJudgmentSize:14
+*UIJudgmentAlpha:15
+*UIComboSize:16
+*UIComboAlpha:17
 
 Auto:Get(LevelOption *Auto)
-LevelAudioOffset:Get(LevelOption *LevelAudioOffset)
-LevelInputOffset:Get(LevelOption *LevelInputOffset)
 Speed:Get(LevelOption *Speed)
 NoteSpeed:Get(LevelOption *NoteSpeed)
 NoteSize:Get(LevelOption *NoteSize)
@@ -1186,13 +1176,13 @@ UIComboAlpha:Get(LevelOption *UIComboAlpha)
 // Level UI Layout
 
 *UIMenu:0
-*UIJudgment:11
-*UIComboValue:22
-*UIComboText:33
-*UIScoreBar:44
-*UIScoreValue:55
-*UILifeBar:66
-*UILifeValue:77
+*UIJudgment:10
+*UIComboValue:20
+*UIComboText:30
+*UIScoreBar:40
+*UIScoreValue:50
+*UILifeBar:60
+*UILifeValue:70
 
 *UIAnchorX:0
 *UIAnchorY:1
@@ -1203,8 +1193,7 @@ UIComboAlpha:Get(LevelOption *UIComboAlpha)
 *UIRotation:6
 *UIAlpha:7
 *UIHorizontalAlign:8
-*UIVerticalAlign:9
-*UIBackground:10
+*UIBackground:9
 
 
 
@@ -1413,7 +1402,7 @@ NoteHeadInputTouchID:GetShifted(EntitySharedMemoryArray NoteHeadSharedMemoryOffs
 *NoteTexture:5
 
 NoteHeadIndex:Get(EntityData *NoteHeadIndex)
-NoteTailTime:Divide(Add(Get(EntityData *NoteTailTime) NoteTimeOffset) Speed)
+NoteTailTime:Divide(Get(EntityData *NoteTailTime) Speed)
 NoteTailLane:Multiply(Get(EntityData *NoteTailLane) MirrorMultiplier)
 NoteSimLineIndex:Get(EntityData *NoteSimLineIndex)
 NoteBucket:Get(EntityData *NoteBucket)
@@ -1423,11 +1412,11 @@ NoteHeadInfoOffset:Multiply(NoteHeadIndex 3)
 NoteHeadDataOffset:Multiply(NoteHeadIndex 32)
 NoteHeadSharedMemoryOffset:Multiply(NoteHeadIndex 32)
 
-NoteHeadTime:Divide(Add(GetShifted(EntityDataArray NoteHeadDataOffset *NoteTailTime) NoteTimeOffset) Speed)
+NoteHeadTime:Divide(GetShifted(EntityDataArray NoteHeadDataOffset *NoteTailTime) Speed)
 NoteHeadLane:Multiply(GetShifted(EntityDataArray NoteHeadDataOffset *NoteTailLane) MirrorMultiplier)
 
-SimLineTime1:Divide(Add(GetShifted(EntityDataArray SimLineDataOffset1 *NoteTailTime) NoteTimeOffset) Speed)
-SimLineTime2:Divide(Add(GetShifted(EntityDataArray SimLineDataOffset2 *NoteTailTime) NoteTimeOffset) Speed)
+SimLineTime1:Divide(GetShifted(EntityDataArray SimLineDataOffset1 *NoteTailTime) Speed)
+SimLineTime2:Divide(GetShifted(EntityDataArray SimLineDataOffset2 *NoteTailTime) Speed)
 SimLineLane1:Multiply(GetShifted(EntityDataArray SimLineDataOffset1 *NoteTailLane) MirrorMultiplier)
 SimLineLane2:Multiply(GetShifted(EntityDataArray SimLineDataOffset2 *NoteTailLane) MirrorMultiplier)
 
