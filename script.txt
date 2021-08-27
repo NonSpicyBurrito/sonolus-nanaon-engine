@@ -45,7 +45,7 @@ InitAutoFlick:And(
     Execute(
         And(
             SoundEffect
-            PlayScheduled(EffectFlick NoteTailTime MinEffectTime)
+            PlayScheduled(EffectPerfectAlternative NoteTailTime MinEffectTime)
         )
         Set(EntityInput *Judgment JudgmentPerfect)
         Set(EntityInput *Bucket NoteBucket)
@@ -243,17 +243,17 @@ PlayAutoLaneEffect:And(
     )
 )
 
-PlayJudgmentSound:And(
+PlayTapJudgmentSound:And(
     SoundEffect
-    Play(Judgment MinEffectTime)
+    Play(Add(EffectMiss Judgment) MinEffectTime)
 )
-PlayFlickSound:And(
+PlayFlickJudgmentSound:And(
     SoundEffect
-    Play(EffectFlick MinEffectTime)
+    Play(Add(EffectMissAlternative Judgment) MinEffectTime)
 )
-PlayEmptySound:And(
+PlayStageSound:And(
     SoundEffect
-    Play(EffectEmpty MinEffectTime)
+    Play(EffectStage MinEffectTime)
 )
 
 
@@ -514,7 +514,7 @@ StageHeight:If(
                         And(
                             Not(TempTouchOccupied)
                             Execute(
-                                PlayEmptySound
+                                PlayStageSound
                                 And(
                                     SlotEffect
                                     SpawnParticleEffect(
@@ -585,7 +585,7 @@ StageHeight:If(
             Set(EntityInput *Bucket NoteBucket)
             Set(EntityInput *BucketValue Multiply(1000 Accuracy))
             PlayTapEffect
-            PlayJudgmentSound
+            PlayTapJudgmentSound
         )
     )
 )
@@ -662,7 +662,7 @@ StageHeight:If(
                         Set(EntityInput *Bucket NoteBucket)
                         Set(EntityInput *BucketValue Multiply(1000 Accuracy))
                         PlayFlickEffect
-                        PlayFlickSound
+                        PlayFlickJudgmentSound
                     )
                 )
                 ProcessTouchDiscontinue
@@ -734,7 +734,7 @@ StageHeight:If(
                         Set(EntityInput *Bucket NoteBucket)
                         Set(EntityInput *BucketValue Multiply(1000 Accuracy))
                         PlayTapEffect
-                        PlayJudgmentSound
+                        PlayTapJudgmentSound
                     )
                 )
                 ProcessTouchDiscontinue
@@ -816,7 +816,7 @@ StageHeight:If(
                         Set(EntityInput *Bucket NoteBucket)
                         Set(EntityInput *BucketValue Multiply(1000 Accuracy))
                         PlayTapEffect
-                        PlayJudgmentSound
+                        PlayTapJudgmentSound
                     )
                 )
                 ProcessTouchDiscontinue
@@ -903,7 +903,7 @@ StageHeight:If(
                         Set(EntityInput *Bucket NoteBucket)
                         Set(EntityInput *BucketValue Multiply(1000 Accuracy))
                         PlayFlickEffect
-                        PlayFlickSound
+                        PlayFlickJudgmentSound
                     )
                 )
                 ProcessTouchDiscontinue
@@ -1058,8 +1058,13 @@ EffectMiss:0
 EffectPerfect:1
 EffectGreat:2
 EffectGood:3
-EffectFlick:4
-EffectEmpty:5
+
+EffectMissAlternative:1000
+EffectPerfectAlternative:1001
+EffectGreatAlternative:1002
+EffectGoodAlternative:1003
+
+EffectStage:10000
 
 
 
