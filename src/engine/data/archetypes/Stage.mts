@@ -41,6 +41,7 @@ export class Stage extends Archetype {
 
         this.drawJudgmentLine()
         this.drawSlots()
+        this.drawStageCover()
     }
 
     get useFallbackStage() {
