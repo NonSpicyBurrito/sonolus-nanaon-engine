@@ -1,7 +1,7 @@
 import { EngineConfigurationUI } from 'sonolus-core'
 
 export const ui: EngineConfigurationUI = {
-    scope: 'Bandori',
+    scope: 'Nanaon',
     primaryMetric: 'arcade',
     secondaryMetric: 'life',
     menuVisibility: {
