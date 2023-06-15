@@ -2,7 +2,9 @@ import { EngineInfo } from 'sonolus-core'
 import { Resource } from './Resource.cjs'
 
 export { ncToLevelData } from './nc/convert.cjs'
+export * from './nc/index.cjs'
 export { noteDataToNC } from './noteData/convert.cjs'
+export * from './noteData/index.cjs'
 
 export const version = '1.0.0'
 
