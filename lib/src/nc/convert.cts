@@ -4,7 +4,7 @@ import {
     LevelData,
     LevelDataEntity,
 } from 'sonolus-core'
-import { BPMObject, ChartObject, NanaonChart, SingleObject, SlideObject } from './index.cjs'
+import { NC, NCBPMChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.cjs'
 
 type Intermediate = {
     archetype: string
@@ -14,9 +14,9 @@ type Intermediate = {
 
 type Append = (intermediate: Intermediate) => void
 
-type Handler<T extends ChartObject> = (object: T, append: Append) => void
+type Handler<T extends NCObject> = (object: T, append: Append) => void
 
-export function nanaonToLevelData(chart: NanaonChart, bgmOffset = 0): LevelData {
+export function ncToLevelData(nc: NC, offset = 0): LevelData {
     const entities: LevelDataEntity[] = []
 
     const beatToIntermediates = new Map<number, Intermediate[]>()
@@ -93,7 +93,7 @@ export function nanaonToLevelData(chart: NanaonChart, bgmOffset = 0): LevelData 
         sim: false,
     })
 
-    const objects = repair(chart)
+    const objects = repair(nc)
 
     for (const object of objects) {
         handlers[object.type](object as never, append)
@@ -113,12 +113,12 @@ export function nanaonToLevelData(chart: NanaonChart, bgmOffset = 0): LevelData 
     }
 
     return {
-        bgmOffset,
+        bgmOffset: offset,
         entities,
     }
 }
 
-const bpm: Handler<BPMObject> = (object, append) =>
+const bpm: Handler<NCBPMChangeObject> = (object, append) =>
     append({
         archetype: EngineArchetypeName.BpmChange,
         data: {
@@ -128,7 +128,7 @@ const bpm: Handler<BPMObject> = (object, append) =>
         sim: false,
     })
 
-const single: Handler<SingleObject> = (object, append) =>
+const single: Handler<NCSingleNote> = (object, append) =>
     append({
         archetype: object.flick ? 'FlickNote' : 'TapNote',
         data: {
@@ -138,7 +138,7 @@ const single: Handler<SingleObject> = (object, append) =>
         sim: true,
     })
 
-const slide: Handler<SlideObject> = (object, append) => {
+const slide: Handler<NCSlideNote> = (object, append) => {
     let prev: Intermediate | undefined
 
     for (const [i, connection] of object.connections.entries()) {
@@ -187,20 +187,20 @@ const slide: Handler<SlideObject> = (object, append) => {
 }
 
 const handlers: {
-    [K in ChartObject['type']]: Handler<Extract<ChartObject, { type: K }>>
+    [K in NCObject['type']]: Handler<Extract<NCObject, { type: K }>>
 } = {
-    BPM: bpm,
-    Single: single,
-    Slide: slide,
+    bpm,
+    single,
+    slide,
 }
 
-const repair = (objects: ChartObject[]) => {
-    const replace = (o: ChartObject, n: ChartObject) => objects.splice(objects.indexOf(o), 1, n)
+const repair = (objects: NCObject[]) => {
+    const replace = (o: NCObject, n: NCObject) => objects.splice(objects.indexOf(o), 1, n)
 
-    const remove = (o: ChartObject) => objects.splice(objects.indexOf(o), 1)
+    const remove = (o: NCObject) => objects.splice(objects.indexOf(o), 1)
 
     for (const object of objects) {
-        if (object.type !== 'Slide') continue
+        if (object.type !== 'slide') continue
 
         object.connections.sort((a, b) => a.beat - b.beat)
 
@@ -211,8 +211,8 @@ const repair = (objects: ChartObject[]) => {
             case 1: {
                 const connection = object.connections[0]
 
-                const single: SingleObject = {
-                    type: 'Single',
+                const single: NCSingleNote = {
+                    type: 'single',
                     lane: connection.lane,
                     beat: connection.beat,
                 }

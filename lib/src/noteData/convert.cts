@@ -1,27 +1,27 @@
-import { Connection, NanaonChart, SingleObject, SlideObject } from '../nanaon/index.cjs'
-import { NoteData, NoteType } from './index.cjs'
+import { NC, NCConnectionNote, NCSingleNote, NCSlideNote } from '../nc/index.cjs'
+import { NoteData, NoteDataNoteType } from './index.cjs'
 
-export const noteDataToNanaon = (noteData: NoteData): NanaonChart => {
-    const nanaon: NanaonChart = [
+export const noteDataToNC = (noteData: NoteData): NC => {
+    const nc: NC = [
         {
-            type: 'BPM',
+            type: 'bpm',
             beat: 0,
             bpm: 60,
         },
     ]
 
-    const idToSlide = new Map<number, SlideObject>()
+    const idToSlide = new Map<number, NCSlideNote>()
 
     for (const note of noteData.m_NoteList) {
         if (!note.m_Time) continue
 
         if (note.m_ParentId) {
-            const connection: Connection = {
+            const connection: NCConnectionNote = {
                 beat: note.m_Time,
                 lane: note.m_Line - 2,
             }
 
-            if (note.m_Type === NoteType.Flick) connection.flick = true
+            if (note.m_Type === NoteDataNoteType.Flick) connection.flick = true
 
             const slide = idToSlide.get(note.m_ParentId)
             if (!slide) throw 'Unexpected missing slide'
@@ -29,8 +29,8 @@ export const noteDataToNanaon = (noteData: NoteData): NanaonChart => {
             idToSlide.set(note.m_Id, slide)
             slide.connections.push(connection)
         } else if (note.m_ChildId) {
-            const slide: SlideObject = {
-                type: 'Slide',
+            const slide: NCSlideNote = {
+                type: 'slide',
                 connections: [
                     {
                         beat: note.m_Time,
@@ -40,19 +40,19 @@ export const noteDataToNanaon = (noteData: NoteData): NanaonChart => {
             }
 
             idToSlide.set(note.m_Id, slide)
-            nanaon.push(slide)
+            nc.push(slide)
         } else {
-            const single: SingleObject = {
-                type: 'Single',
+            const single: NCSingleNote = {
+                type: 'single',
                 beat: note.m_Time,
                 lane: note.m_Line - 2,
             }
 
-            if (note.m_Type === NoteType.Flick) single.flick = true
+            if (note.m_Type === NoteDataNoteType.Flick) single.flick = true
 
-            nanaon.push(single)
+            nc.push(single)
         }
     }
 
-    return nanaon
+    return nc
 }

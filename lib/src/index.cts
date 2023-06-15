@@ -1,8 +1,8 @@
 import { EngineInfo } from 'sonolus-core'
 import { Resource } from './Resource.cjs'
 
-export { nanaonToLevelData } from './nanaon/convert.cjs'
-export { noteDataToNanaon } from './noteData/convert.cjs'
+export { ncToLevelData } from './nc/convert.cjs'
+export { noteDataToNC } from './noteData/convert.cjs'
 
 export const version = '1.0.0'
 
