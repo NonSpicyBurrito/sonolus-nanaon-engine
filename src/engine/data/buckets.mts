@@ -118,7 +118,7 @@ export const buckets = defineBuckets({
                 rotation: -90,
             },
             {
-                id: skin.sprites.flickNote.id,
+                id: skin.sprites.flickEndNote.id,
                 x: 2,
                 y: 0,
                 w: 2,

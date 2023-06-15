@@ -16,6 +16,7 @@ export const skin = defineSkin({
         tapNote: SkinSpriteName.NoteHeadCyan,
 
         flickNote: SkinSpriteName.NoteHeadGreen,
+        flickEndNote: SkinSpriteName.NoteTailGreen,
         flickArrow: SkinSpriteName.DirectionalMarkerGreen,
 
         slideStartNote: SkinSpriteName.NoteHeadPurple,
