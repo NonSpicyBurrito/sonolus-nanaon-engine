@@ -1,12 +1,12 @@
 export type NC = NCObject[]
 
-export type NCObject = NCBPMChangeObject | NCSingleNote | NCSlideNote
+export type NCObject = NCBpmChangeObject | NCSingleNote | NCSlideNote
 
 type BaseNCObject = {
     beat: number
 }
 
-export type NCBPMChangeObject = BaseNCObject & {
+export type NCBpmChangeObject = BaseNCObject & {
     type: 'bpm'
     bpm: number
 }

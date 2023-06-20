@@ -4,7 +4,7 @@ import {
     LevelData,
     LevelDataEntity,
 } from 'sonolus-core'
-import { NC, NCBPMChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.cjs'
+import { NC, NCBpmChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.cjs'
 
 type Intermediate = {
     archetype: string
@@ -118,7 +118,7 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
     }
 }
 
-const bpm: Handler<NCBPMChangeObject> = (object, append) =>
+const bpm: Handler<NCBpmChangeObject> = (object, append) =>
     append({
         archetype: EngineArchetypeName.BpmChange,
         data: {
