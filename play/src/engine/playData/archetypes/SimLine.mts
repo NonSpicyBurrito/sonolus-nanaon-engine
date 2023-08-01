@@ -3,7 +3,6 @@ import { skin } from '../skin.mjs'
 import { note } from './constants.mjs'
 import { archetypes } from './index.mjs'
 import { layer } from './layer.mjs'
-import { Note } from './notes/Note.mjs'
 import { getZ, perspectiveLayout } from './utils.mjs'
 
 export class SimLine extends Archetype {
@@ -33,7 +32,7 @@ export class SimLine extends Archetype {
         this.targetTime = bpmChanges.at(this.aData.beat).time
 
         this.visualTime.max = this.targetTime
-        this.visualTime.min = this.visualTime.max - Note.duration
+        this.visualTime.min = this.visualTime.max - this.duration
 
         this.spawnTime = this.visualTime.min
     }
@@ -52,7 +51,7 @@ export class SimLine extends Archetype {
 
     initialize() {
         if (options.hidden > 0)
-            this.visualTime.hidden = this.visualTime.max - Note.duration * options.hidden
+            this.visualTime.hidden = this.visualTime.max - this.duration * options.hidden
 
         const h = note.h * options.noteSize
 
@@ -102,8 +101,16 @@ export class SimLine extends Archetype {
     }
 
     render() {
-        this.y = Note.approach(this.visualTime.min, this.visualTime.max, time.now)
+        this.y = this.approach(this.visualTime.min, this.visualTime.max, time.now)
 
         skin.sprites.simLine.draw(this.spriteLayout.mul(this.y), this.z, 1)
+    }
+
+    approach(fromTime: number, toTime: number, now: number) {
+        return Math.lerp(0.1, 1, 71.7675 ** Math.remap(fromTime, toTime, -1, 0, now))
+    }
+
+    get duration() {
+        return (12 - options.noteSpeed) / 2
     }
 }

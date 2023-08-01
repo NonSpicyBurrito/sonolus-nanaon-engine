@@ -10,18 +10,6 @@
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": "error",
-        "@typescript-eslint/no-empty-function": "off"
-    },
-    "overrides": [
-        {
-            "files": [
-                "./lib/**/*.cts"
-            ],
-            "rules": {
-                "@typescript-eslint/explicit-module-boundary-types": "error",
-                "@typescript-eslint/no-empty-function": "error"
-            }
-        }
-    ]
+        "prettier/prettier": "error"
+    }
 }
