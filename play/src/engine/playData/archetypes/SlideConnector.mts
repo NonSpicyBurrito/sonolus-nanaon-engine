@@ -1,5 +1,6 @@
 import { options } from '../../configuration/options.mjs'
 import { effect, getScheduleSFXTime } from '../effect.mjs'
+import { approach, note } from '../note.mjs'
 import { circularEffectLayout, linearEffectLayout, particle } from '../particle.mjs'
 import { getZ, layer, skin } from '../skin.mjs'
 import { archetypes } from './index.mjs'
@@ -45,7 +46,7 @@ export class SlideConnector extends Archetype {
 
         this.scheduleSFXTime = getScheduleSFXTime(this.head.time)
 
-        this.visualTime.min = this.head.time - this.duration
+        this.visualTime.min = this.head.time - note.duration
 
         this.spawnTime = Math.min(this.visualTime.min, this.scheduleSFXTime)
     }
@@ -71,7 +72,7 @@ export class SlideConnector extends Archetype {
         this.tail.r = this.tail.lane + w
 
         if (options.hidden > 0)
-            this.visualTime.hidden = this.tail.time - this.duration * options.hidden
+            this.visualTime.hidden = this.tail.time - note.duration * options.hidden
 
         this.connector.z = getZ(layer.note.connector, this.head.time, this.headData.lane)
     }
@@ -144,11 +145,11 @@ export class SlideConnector extends Archetype {
     renderConnector() {
         if (options.hidden > 0 && time.now > this.visualTime.hidden) return
 
-        const hiddenDuration = options.hidden > 0 ? this.duration * options.hidden : 0
+        const hiddenDuration = options.hidden > 0 ? note.duration * options.hidden : 0
 
         const visibleTime = {
             min: Math.max(this.head.time, time.now + hiddenDuration),
-            max: Math.min(this.tail.time, time.now + this.duration),
+            max: Math.min(this.tail.time, time.now + note.duration),
         }
 
         const l = {
@@ -162,8 +163,8 @@ export class SlideConnector extends Archetype {
         }
 
         const y = {
-            min: this.approach(visibleTime.min - this.duration, visibleTime.min, time.now),
-            max: this.approach(visibleTime.max - this.duration, visibleTime.max, time.now),
+            min: approach(visibleTime.min - note.duration, visibleTime.min, time.now),
+            max: approach(visibleTime.max - note.duration, visibleTime.max, time.now),
         }
 
         const layout = {
@@ -263,13 +264,5 @@ export class SlideConnector extends Archetype {
         })
 
         return particle.effects.holdLinear.spawn(layout, 1, true)
-    }
-
-    approach(fromTime: number, toTime: number, now: number) {
-        return Math.lerp(0.1, 1, 71.7675 ** Math.remap(fromTime, toTime, -1, 0, now))
-    }
-
-    get duration() {
-        return (12 - options.noteSpeed) / 2
     }
 }

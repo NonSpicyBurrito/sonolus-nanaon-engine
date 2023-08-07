@@ -2,7 +2,7 @@ import { EngineArchetypeDataName } from 'sonolus-core'
 import { options } from '../../../configuration/options.mjs'
 import { getScheduleSFXTime, sfxDistance } from '../../effect.mjs'
 import { getHitbox, lane } from '../../lane.mjs'
-import { note } from '../../note.mjs'
+import { approach, note } from '../../note.mjs'
 import { circularEffectLayout, linearEffectLayout, particle } from '../../particle.mjs'
 import { getZ, layer } from '../../skin.mjs'
 import { perspectiveLayout } from '../../utils.mjs'
@@ -81,7 +81,7 @@ export abstract class Note extends Archetype {
         this.scheduleSFXTime = getScheduleSFXTime(this.targetTime)
 
         this.visualTime.max = this.targetTime
-        this.visualTime.min = this.visualTime.max - this.duration
+        this.visualTime.min = this.visualTime.max - note.duration
 
         this.spawnTime = Math.min(this.visualTime.min, this.scheduleSFXTime)
 
@@ -98,7 +98,7 @@ export abstract class Note extends Archetype {
 
     initialize() {
         if (options.hidden > 0)
-            this.visualTime.hidden = this.visualTime.max - this.duration * options.hidden
+            this.visualTime.hidden = this.visualTime.max - note.duration * options.hidden
 
         this.inputTime.min = this.targetTime + this.windows.good.min + input.offset
         this.inputTime.max = this.targetTime + this.windows.good.max + input.offset
@@ -166,7 +166,7 @@ export abstract class Note extends Archetype {
     }
 
     render() {
-        this.y = this.approach(this.visualTime.min, this.visualTime.max, time.now)
+        this.y = approach(this.visualTime.min, this.visualTime.max, time.now)
 
         this.sprites.note.draw(this.layout.mul(this.y), this.z, 1)
     }
@@ -222,13 +222,5 @@ export abstract class Note extends Archetype {
             0.2,
             false,
         )
-    }
-
-    approach(fromTime: number, toTime: number, now: number) {
-        return Math.lerp(0.1, 1, 71.7675 ** Math.remap(fromTime, toTime, -1, 0, now))
-    }
-
-    get duration() {
-        return (12 - options.noteSpeed) / 2
     }
 }
