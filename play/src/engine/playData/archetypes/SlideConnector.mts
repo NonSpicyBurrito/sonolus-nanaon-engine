@@ -1,10 +1,10 @@
 import { options } from '../../configuration/options.mjs'
 import { effect } from '../effect.mjs'
+import { layer } from '../layer.mjs'
 import { particle } from '../particle.mjs'
 import { skin } from '../skin.mjs'
+import { circularEffectLayout, getScheduleSFXTime, getZ, linearEffectLayout } from '../utils.mjs'
 import { archetypes } from './index.mjs'
-import { layer } from './layer.mjs'
-import { circularEffectLayout, getScheduleSFXTime, getZ, linearEffectLayout } from './utils.mjs'
 
 export class SlideConnector extends Archetype {
     data = this.defineData({
