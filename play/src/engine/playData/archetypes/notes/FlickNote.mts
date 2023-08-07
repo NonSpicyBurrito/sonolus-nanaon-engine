@@ -1,3 +1,4 @@
+import { leftRotated, rightRotated } from '../../../../../../shared/src/engine/data/utils.mjs'
 import { options } from '../../../configuration/options.mjs'
 import { buckets } from '../../buckets.mjs'
 import { effect } from '../../effect.mjs'
@@ -53,27 +54,8 @@ export class FlickNote extends Note {
         const l = ml - w
         const r = mr + w
 
-        new Quad({
-            x1: ml,
-            x2: l,
-            x3: l,
-            x4: ml,
-            y1: b,
-            y2: b,
-            y3: t,
-            y4: t,
-        }).copyTo(this.arrow.layouts[0])
-
-        new Quad({
-            x1: mr,
-            x2: r,
-            x3: r,
-            x4: mr,
-            y1: t,
-            y2: t,
-            y3: b,
-            y4: b,
-        }).copyTo(this.arrow.layouts[1])
+        leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
+        rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
 
         this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.data.lane)
     }
