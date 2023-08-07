@@ -1,3 +1,5 @@
+import { skin } from './skin.mjs'
+
 export const lane = {
     t: 0.1,
     b: 1,
@@ -9,3 +11,11 @@ export const lane = {
         b: 1.5,
     },
 }
+
+export const getHitbox = ({ l, r }: { l: number; r: number }) =>
+    new Rect({
+        l: l - 0.75,
+        r: r + 0.75,
+        b: lane.hitbox.b,
+        t: lane.hitbox.t,
+    }).transform(skin.transform)
