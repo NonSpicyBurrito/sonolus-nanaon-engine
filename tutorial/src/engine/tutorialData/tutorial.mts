@@ -3,6 +3,7 @@ import { flickArrow } from './components/flickArrow.mjs'
 import { initialization } from './components/initialization.mjs'
 import { noteDisplay } from './components/noteDisplay.mjs'
 import { stage } from './components/stage.mjs'
+import { segment } from './segment.mjs'
 import { flickNoteFall } from './segments/flickNote/fall.mjs'
 import { flickNoteFrozen } from './segments/flickNote/frozen.mjs'
 import { flickNoteHit } from './segments/flickNote/hit.mjs'
@@ -23,7 +24,6 @@ import { tapNoteFall } from './segments/tapNote/fall.mjs'
 import { tapNoteFrozen } from './segments/tapNote/frozen.mjs'
 import { tapNoteHit } from './segments/tapNote/hit.mjs'
 import { tapNoteIntro } from './segments/tapNote/intro.mjs'
-import { segment } from './shared.mjs'
 
 const components = [initialization, stage, flickArrow, noteDisplay, connector] as const
 

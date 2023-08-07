@@ -1,5 +1,6 @@
+import { hand } from '../hand.mjs'
 import { particle } from '../particle.mjs'
-import { hand, scaledScreen } from '../shared.mjs'
+import { scaledScreen } from '../scaledScreen.mjs'
 import { skin } from '../skin.mjs'
 
 export const initialization = {
@@ -16,9 +17,6 @@ export const initialization = {
         const b = stage.h * -0.32
 
         const w = stage.w * 0.165
-
-        scaledScreen.l = screen.l / w
-        scaledScreen.r = screen.r / w
 
         scaledScreen.wToH = w / (t - b)
 

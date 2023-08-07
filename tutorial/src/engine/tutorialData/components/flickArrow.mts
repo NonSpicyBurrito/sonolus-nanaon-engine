@@ -1,7 +1,8 @@
-import { layer } from '../layer.mjs'
-import { scaledScreen, segment } from '../shared.mjs'
-import { skin } from '../skin.mjs'
-import { approach, leftRotated, rightRotated } from '../utils.mjs'
+import { approach } from '../../../../../shared/src/engine/data/note.mjs'
+import { leftRotated, rightRotated } from '../../../../../shared/src/engine/data/utils.mjs'
+import { scaledScreen } from '../scaledScreen.mjs'
+import { segment } from '../segment.mjs'
+import { layer, skin } from '../skin.mjs'
 
 const sprites = {
     arrow: skin.sprites.flickArrow,
@@ -35,7 +36,7 @@ export const flickArrow = {
             sprites.arrow.draw(left, layer.note.arrow, a)
             sprites.arrow.draw(right, layer.note.arrow, a)
         } else {
-            const y = mode === 2 ? approach(segment.time) : 1
+            const y = mode === 2 ? approach(0, 2, segment.time) : 1
 
             const w = 1 / 3
             const h = w * scaledScreen.wToH

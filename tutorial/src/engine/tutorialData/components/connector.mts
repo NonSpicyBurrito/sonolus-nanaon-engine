@@ -1,8 +1,7 @@
-import { note } from '../constants.mjs'
-import { layer } from '../layer.mjs'
-import { segment } from '../shared.mjs'
-import { skin } from '../skin.mjs'
-import { approach, perspectiveLayout } from '../utils.mjs'
+import { approach, note } from '../../../../../shared/src/engine/data/note.mjs'
+import { perspectiveLayout } from '../../../../../shared/src/engine/data/utils.mjs'
+import { segment } from '../segment.mjs'
+import { layer, skin } from '../skin.mjs'
 
 const sprites = {
     connector: skin.sprites.connector,
@@ -27,8 +26,8 @@ export const connector = {
 
             sprites.connector.draw(layout, layer.note.connector, a)
         } else {
-            const t = approach(mode === 4 ? segment.time : 0)
-            const b = approach(mode === 3 ? segment.time : 2)
+            const t = approach(0, 2, mode === 4 ? segment.time : 0)
+            const b = approach(0, 2, mode === 3 ? segment.time : 2)
 
             const layout = perspectiveLayout({ l: -0.5, r: 0.5, b, t })
 
