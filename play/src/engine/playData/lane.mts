@@ -1,8 +1,8 @@
+import { lane as _lane } from '../../../../shared/src/engine/data/lane.mjs'
 import { skin } from './skin.mjs'
 
 export const lane = {
-    t: 0.1,
-    b: 1,
+    ..._lane,
 
     hitbox: {
         l: -2.5,

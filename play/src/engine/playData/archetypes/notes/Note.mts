@@ -1,11 +1,12 @@
 import { EngineArchetypeDataName } from 'sonolus-core'
+import { approach } from '../../../../../../shared/src/engine/data/note.mjs'
+import { perspectiveLayout } from '../../../../../../shared/src/engine/data/utils.mjs'
 import { options } from '../../../configuration/options.mjs'
 import { getScheduleSFXTime, sfxDistance } from '../../effect.mjs'
 import { getHitbox, lane } from '../../lane.mjs'
-import { approach, note } from '../../note.mjs'
+import { note } from '../../note.mjs'
 import { circularEffectLayout, linearEffectLayout, particle } from '../../particle.mjs'
 import { getZ, layer } from '../../skin.mjs'
-import { perspectiveLayout } from '../../utils.mjs'
 
 export abstract class Note extends Archetype {
     hasInput = true

@@ -1,6 +1,7 @@
+import { approach } from '../../../../../shared/src/engine/data/note.mjs'
 import { options } from '../../configuration/options.mjs'
 import { effect, getScheduleSFXTime } from '../effect.mjs'
-import { approach, note } from '../note.mjs'
+import { note } from '../note.mjs'
 import { circularEffectLayout, linearEffectLayout, particle } from '../particle.mjs'
 import { getZ, layer, skin } from '../skin.mjs'
 import { archetypes } from './index.mjs'
