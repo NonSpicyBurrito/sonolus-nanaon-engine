@@ -2,12 +2,10 @@ export type NoteData = {
     m_NoteList: NoteDataNote[]
 }
 
-export const NoteDataNoteType = {
-    Normal: 1,
-    Flick: 2,
-} as const
-
-export type NoteDataNoteType = (typeof NoteDataNoteType)[keyof typeof NoteDataNoteType]
+export enum NoteDataNoteType {
+    Normal = 1,
+    Flick = 2,
+}
 
 export type NoteDataNote = {
     m_Id: number

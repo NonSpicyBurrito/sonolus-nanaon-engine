@@ -8,13 +8,20 @@ const sprites = {
     arrow: skin.sprites.flickArrow,
 }
 
-let mode = tutorialMemory(DataType<0 | 1 | 2 | 3>)
+enum Mode {
+    None,
+    Overlay,
+    Fall,
+    Frozen,
+}
+
+let mode = tutorialMemory(DataType<Mode>)
 
 export const flickArrow = {
     update() {
         if (!mode) return
 
-        if (mode === 1) {
+        if (mode === Mode.Overlay) {
             const a = Math.unlerpClamped(1, 0.75, segment.time)
 
             const w = 2 / 3
@@ -36,7 +43,7 @@ export const flickArrow = {
             sprites.arrow.draw(left, layer.note.arrow, a)
             sprites.arrow.draw(right, layer.note.arrow, a)
         } else {
-            const y = mode === 2 ? approach(0, 2, segment.time) : 1
+            const y = mode === Mode.Fall ? approach(0, 2, segment.time) : 1
 
             const w = 1 / 3
             const h = w * scaledScreen.wToH
@@ -60,18 +67,18 @@ export const flickArrow = {
     },
 
     showOverlay() {
-        mode = 1
+        mode = Mode.Overlay
     },
 
     showFall() {
-        mode = 2
+        mode = Mode.Fall
     },
 
     showFrozen() {
-        mode = 3
+        mode = Mode.Frozen
     },
 
     clear() {
-        mode = 0
+        mode = Mode.None
     },
 }
