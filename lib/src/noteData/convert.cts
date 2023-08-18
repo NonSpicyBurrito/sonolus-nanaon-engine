@@ -24,7 +24,7 @@ export const noteDataToNC = (noteData: NoteData): NC => {
             if (note.m_Type === NoteDataNoteType.Flick) connection.flick = true
 
             const slide = idToSlide.get(note.m_ParentId)
-            if (!slide) throw 'Unexpected missing slide'
+            if (!slide) throw new Error('Unexpected missing slide')
 
             idToSlide.set(note.m_Id, slide)
             slide.connections.push(connection)

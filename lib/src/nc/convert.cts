@@ -46,7 +46,7 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
 
         if (intermediate.sim) {
             const beat = intermediate.data[EngineArchetypeDataName.Beat]
-            if (typeof beat !== 'number') throw 'Unexpected beat'
+            if (typeof beat !== 'number') throw new Error('Unexpected beat')
 
             const intermediates = beatToIntermediates.get(beat)
             if (intermediates) {
@@ -118,7 +118,7 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
     }
 }
 
-const bpm: Handler<NCBpmChangeObject> = (object, append) =>
+const bpm: Handler<NCBpmChangeObject> = (object, append) => {
     append({
         archetype: EngineArchetypeName.BpmChange,
         data: {
@@ -127,8 +127,9 @@ const bpm: Handler<NCBpmChangeObject> = (object, append) =>
         },
         sim: false,
     })
+}
 
-const single: Handler<NCSingleNote> = (object, append) =>
+const single: Handler<NCSingleNote> = (object, append) => {
     append({
         archetype: object.flick ? 'FlickNote' : 'TapNote',
         data: {
@@ -137,6 +138,7 @@ const single: Handler<NCSingleNote> = (object, append) =>
         },
         sim: true,
     })
+}
 
 const slide: Handler<NCSlideNote> = (object, append) => {
     let prev: Intermediate | undefined
