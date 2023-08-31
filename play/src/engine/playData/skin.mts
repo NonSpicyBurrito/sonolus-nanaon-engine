@@ -5,6 +5,7 @@ export const skin = defineSkin({
         cover: SkinSpriteName.StageCover,
 
         lane: SkinSpriteName.Lane,
+        laneAlternative: SkinSpriteName.LaneAlternative,
         slot: SkinSpriteName.NoteSlot,
         judgmentLine: SkinSpriteName.JudgmentLine,
 

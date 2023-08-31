@@ -94,7 +94,11 @@ export class Stage extends Archetype {
                 b: 1,
             })
 
-            skin.sprites.lane.draw(layout, layer.stage, 1)
+            if (i % 2 === 1) {
+                skin.sprites.laneAlternative.draw(layout, layer.stage, 1)
+            } else {
+                skin.sprites.lane.draw(layout, layer.stage, 1)
+            }
         }
     }
 
