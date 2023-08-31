@@ -179,12 +179,16 @@ export abstract class Note extends Archetype {
     }
 
     playSFX() {
-        if (this.result.judgment === Judgment.Perfect) {
-            this.clips.perfect.play(sfxDistance)
-        } else if (this.result.judgment === Judgment.Great) {
-            this.clips.great.play(sfxDistance)
-        } else if (this.result.judgment === Judgment.Good) {
-            this.clips.good.play(sfxDistance)
+        switch (this.result.judgment) {
+            case Judgment.Perfect:
+                this.clips.perfect.play(sfxDistance)
+                break
+            case Judgment.Great:
+                this.clips.great.play(sfxDistance)
+                break
+            case Judgment.Good:
+                this.clips.good.play(sfxDistance)
+                break
         }
     }
 
