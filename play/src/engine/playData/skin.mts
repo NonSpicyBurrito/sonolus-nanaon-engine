@@ -7,7 +7,6 @@ export const skin = defineSkin({
         lane: SkinSpriteName.Lane,
         slot: SkinSpriteName.NoteSlot,
         judgmentLine: SkinSpriteName.JudgmentLine,
-        note: SkinSpriteName.NoteHeadCyan,
 
         nanaonStage: 'Nanaon Stage',
 
