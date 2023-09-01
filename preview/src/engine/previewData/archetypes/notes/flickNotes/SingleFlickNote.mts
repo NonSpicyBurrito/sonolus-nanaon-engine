@@ -6,7 +6,7 @@ import { Note } from '../Note.mjs'
 
 export abstract class SingleFlickNote extends Note {
     render() {
-        const { time, position } = super.render()
+        const { time, pos } = super.render()
 
         const z = getZ(layer.note.arrow, time, this.data.lane)
 
@@ -23,9 +23,9 @@ export abstract class SingleFlickNote extends Note {
         const l = ml - w
         const r = mr + w
 
-        skin.sprites.flickArrow.draw(leftRotated({ l, r: ml, b, t }).add(position), z, 1)
-        skin.sprites.flickArrow.draw(rightRotated({ l: mr, r, b, t }).add(position), z, 1)
+        skin.sprites.flickArrow.draw(leftRotated({ l, r: ml, b, t }).add(pos), z, 1)
+        skin.sprites.flickArrow.draw(rightRotated({ l: mr, r, b, t }).add(pos), z, 1)
 
-        return { time, position }
+        return { time, pos }
     }
 }

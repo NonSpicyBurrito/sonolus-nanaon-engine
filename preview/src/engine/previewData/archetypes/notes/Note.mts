@@ -22,8 +22,8 @@ export abstract class Note extends Archetype {
 
     render() {
         const time = bpmChanges.at(this.data.beat).time
+        const pos = panel.getPos(time)
 
-        const position = panel.positionFromTime(time)
         const z = getZ(layer.note.body, time, this.data.lane)
 
         this.sprite.draw(
@@ -32,11 +32,11 @@ export abstract class Note extends Archetype {
                 r: this.data.lane + 0.5 * options.noteSize,
                 b: -note.h * options.noteSize,
                 t: note.h * options.noteSize,
-            }).add(position),
+            }).add(pos),
             z,
             1,
         )
 
-        return { time, position }
+        return { time, pos }
     }
 }
