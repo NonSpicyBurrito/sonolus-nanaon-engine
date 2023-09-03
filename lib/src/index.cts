@@ -6,7 +6,7 @@ export * from './nc/index.cjs'
 export { noteDataToNC } from './noteData/convert.cjs'
 export * from './noteData/index.cjs'
 
-export const version = '1.1.0'
+export const version = '1.2.0'
 
 export const engineInfo = {
     name: 'nanaon',
