@@ -1,15 +1,10 @@
 import { SkinSpriteName } from 'sonolus-core'
+import { panel } from './panel.mjs'
 
 export const skin = defineSkin({
     sprites: {
-        cover: SkinSpriteName.StageCover,
-
         lane: SkinSpriteName.Lane,
         laneAlternative: SkinSpriteName.LaneAlternative,
-        slot: SkinSpriteName.NoteSlot,
-        judgmentLine: SkinSpriteName.JudgmentLine,
-
-        nanaonStage: 'Nanaon Stage',
 
         simLine: SkinSpriteName.SimultaneousConnectionNeutral,
 
@@ -24,6 +19,9 @@ export const skin = defineSkin({
         slideEndNote: SkinSpriteName.NoteTailPurple,
 
         connector: SkinSpriteName.NoteConnectionPurple,
+
+        beatLine: SkinSpriteName.GridNeutral,
+        bpmChangeLine: SkinSpriteName.GridPurple,
     },
 })
 
@@ -38,9 +36,24 @@ export const layer = {
 
     simLine: 90,
 
-    slot: 2,
-    judgmentLine: 1,
+    line: 10,
+
     stage: 0,
+}
+
+export const line = (sprite: SkinSprite, beat: number, a: number) => {
+    const pos = panel.getPos(bpmChanges.at(beat).time)
+
+    sprite.draw(
+        new Rect({
+            l: -2.5,
+            r: 2.5,
+            b: -panel.h * 0.0025,
+            t: panel.h * 0.0025,
+        }).add(pos),
+        layer.line,
+        a,
+    )
 }
 
 export const getZ = (layer: number, time: number, lane: number) =>
