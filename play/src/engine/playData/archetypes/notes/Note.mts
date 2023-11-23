@@ -120,19 +120,12 @@ export abstract class Note extends Archetype {
             r: this.data.lane,
         }).copyTo(this.hitbox)
 
-        if (options.autoplay) {
-            this.result.judgment = Judgment.Perfect
-
-            this.result.bucket.index = this.bucket.index
-        } else {
-            this.result.accuracy = this.windows.good.max
-        }
+        this.result.accuracy = this.windows.good.max
     }
 
     touchOrder = 1
 
     updateParallel() {
-        if (options.autoplay && time.now >= this.targetTime) this.despawn = true
         if (time.now > this.inputTime.max) this.despawn = true
         if (this.despawn) return
 
@@ -145,19 +138,12 @@ export abstract class Note extends Archetype {
         this.render()
     }
 
-    terminate() {
-        if (!options.autoplay) return
-
-        if (options.noteEffectEnabled) this.playNoteEffects()
-        if (options.laneEffectEnabled) this.playLaneEffects()
-    }
-
     get shouldScheduleSFX() {
-        return options.sfxEnabled && (options.autoplay || options.autoSFX)
+        return options.sfxEnabled && options.autoSFX
     }
 
     get shouldPlaySFX() {
-        return options.sfxEnabled && !options.autoplay && !options.autoSFX
+        return options.sfxEnabled && !options.autoSFX
     }
 
     scheduleSFX() {
