@@ -10,7 +10,7 @@ export const version = '1.2.1'
 
 export const engineInfo = {
     name: 'nanaon',
-    version: 10,
+    version: 11,
     title: {
         en: '22/7',
     },
