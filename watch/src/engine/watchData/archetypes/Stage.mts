@@ -1,33 +1,17 @@
+import { lane } from '../../../../../shared/src/engine/data/lane.mjs'
 import { perspectiveLayout } from '../../../../../shared/src/engine/data/utils.mjs'
 import { options } from '../../configuration/options.mjs'
-import { effect, sfxDistance } from '../effect.mjs'
-import { lane } from '../lane.mjs'
 import { note } from '../note.mjs'
-import { particle } from '../particle.mjs'
 import { scaledScreen } from '../scaledScreen.mjs'
 import { layer, skin } from '../skin.mjs'
-import { isUsed } from './InputManager.mjs'
 
 export class Stage extends Archetype {
-    hitbox = this.entityMemory(Rect)
-
-    spawnOrder() {
-        return 2
+    spawnTime() {
+        return -999999
     }
 
-    initialize() {
-        new Rect(lane.hitbox).transform(skin.transform).copyTo(this.hitbox)
-    }
-
-    touchOrder = 2
-    touch() {
-        for (const touch of touches) {
-            if (!touch.started) continue
-            if (!this.hitbox.contains(touch.position)) continue
-            if (isUsed(touch)) continue
-
-            this.onEmptyTap(touch)
-        }
+    despawnTime() {
+        return 999999
     }
 
     updateParallel() {
@@ -44,43 +28,6 @@ export class Stage extends Archetype {
 
     get useFallbackStage() {
         return !skin.sprites.nanaonStage.exists
-    }
-
-    onEmptyTap(touch: Touch) {
-        this.playEmptyEffects(this.xToL(touch.position.x))
-    }
-
-    xToL(x: number) {
-        return Math.floor(Math.unlerp(this.hitbox.l, this.hitbox.r, x) * 5) - 2.5
-    }
-
-    playEmptyEffects(l: number) {
-        if (options.sfxEnabled) this.playEmptySFX()
-        if (options.laneEffectEnabled) this.playEmptyLaneEffects(l)
-        if (options.slotEffectEnabled) this.playEmptySlotEffects(l)
-    }
-
-    playEmptySFX() {
-        effect.clips.stage.play(sfxDistance)
-    }
-
-    playEmptyLaneEffects(l: number) {
-        particle.effects.lane.spawn(
-            perspectiveLayout({ l, r: l + 1, b: lane.b, t: lane.t }),
-            0.2,
-            false,
-        )
-    }
-
-    playEmptySlotEffects(l: number) {
-        const w = 0.5 * options.slotEffectSize
-        const h = w * 2 * scaledScreen.wToH
-
-        particle.effects.slot.spawn(
-            new Rect({ l: l + 0.5 - w, r: l + 0.5 + w, t: 1 - h, b: 1 }),
-            0.6,
-            false,
-        )
     }
 
     drawFallbackStage() {

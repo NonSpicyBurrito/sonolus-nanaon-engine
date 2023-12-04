@@ -11,6 +11,8 @@ export class SimLine extends Archetype {
         bRef: { name: 'b', type: Number },
     })
 
+    initialized = this.entityMemory(Boolean)
+
     targetTime = this.entityMemory(Number)
 
     visualTime = this.entityMemory({
@@ -18,8 +20,6 @@ export class SimLine extends Archetype {
         max: Number,
         hidden: Number,
     })
-
-    spawnTime = this.entityMemory(Number)
 
     spriteLayout = this.entityMemory(Quad)
     z = this.entityMemory(Number)
@@ -33,23 +33,38 @@ export class SimLine extends Archetype {
 
         this.visualTime.max = this.targetTime
         this.visualTime.min = this.visualTime.max - note.duration
-
-        this.spawnTime = this.visualTime.min
     }
 
-    spawnOrder() {
-        if (!options.simLineEnabled) return 100000
-
-        return 1000 + this.spawnTime
+    spawnTime() {
+        return this.visualTime.min
     }
 
-    shouldSpawn() {
-        if (!options.simLineEnabled) return false
-
-        return time.now >= this.spawnTime
+    despawnTime() {
+        return this.visualTime.max
     }
 
     initialize() {
+        if (this.initialized) return
+        this.initialized = true
+
+        this.globalInitialize()
+    }
+
+    updateParallel() {
+        if (options.hidden > 0 && time.now > this.visualTime.hidden) return
+
+        this.render()
+    }
+
+    get aData() {
+        return archetypes.TapNote.data.get(this.data.aRef)
+    }
+
+    get bData() {
+        return archetypes.TapNote.data.get(this.data.bRef)
+    }
+
+    globalInitialize() {
         if (options.hidden > 0)
             this.visualTime.hidden = this.visualTime.max - note.duration * options.hidden
 
@@ -65,36 +80,6 @@ export class SimLine extends Archetype {
         perspectiveLayout({ l, r, b, t }).copyTo(this.spriteLayout)
 
         this.z = getZ(layer.simLine, this.targetTime, l)
-    }
-
-    updateParallel() {
-        if (
-            this.aInfo.state === EntityState.Despawned ||
-            this.bInfo.state === EntityState.Despawned
-        ) {
-            this.despawn = true
-            return
-        }
-
-        if (options.hidden > 0 && time.now > this.visualTime.hidden) return
-
-        this.render()
-    }
-
-    get aData() {
-        return archetypes.TapNote.data.get(this.data.aRef)
-    }
-
-    get aInfo() {
-        return entityInfos.get(this.data.aRef)
-    }
-
-    get bData() {
-        return archetypes.TapNote.data.get(this.data.bRef)
-    }
-
-    get bInfo() {
-        return entityInfos.get(this.data.bRef)
     }
 
     render() {
