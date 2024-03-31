@@ -1,3 +1,5 @@
+import { windows } from '../../../../../../shared/src/engine/data/windows.mjs'
+import { buckets } from '../../buckets.mjs'
 import { effect } from '../../effect.mjs'
 import { particle } from '../../particle.mjs'
 import { skin } from '../../skin.mjs'
@@ -16,6 +18,10 @@ export class SlideTickNote extends Note {
         circular: particle.effects.tapNoteCircular,
         linear: particle.effects.tapNoteLinear,
     }
+
+    windows = windows.slideTickNote
+
+    bucket = buckets.slideTickNote
 
     render() {
         if (time.now >= this.targetTime) return

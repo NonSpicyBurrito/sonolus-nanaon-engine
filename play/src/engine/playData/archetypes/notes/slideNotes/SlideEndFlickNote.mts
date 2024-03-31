@@ -1,4 +1,5 @@
 import { leftRotated, rightRotated } from '../../../../../../../shared/src/engine/data/utils.mjs'
+import { windows } from '../../../../../../../shared/src/engine/data/windows.mjs'
 import { options } from '../../../../configuration/options.mjs'
 import { buckets } from '../../../buckets.mjs'
 import { effect } from '../../../effect.mjs'
@@ -6,7 +7,6 @@ import { flick } from '../../../flick.mjs'
 import { particle } from '../../../particle.mjs'
 import { scaledScreen } from '../../../scaledScreen.mjs'
 import { getZ, layer, skin } from '../../../skin.mjs'
-import { windows } from '../../../windows.mjs'
 import { SlideNote } from './SlideNote.mjs'
 
 export class SlideEndFlickNote extends SlideNote {

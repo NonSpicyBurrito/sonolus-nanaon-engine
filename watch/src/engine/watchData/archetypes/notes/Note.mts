@@ -24,6 +24,10 @@ export abstract class Note extends Archetype {
         linear: ParticleEffect
     }
 
+    abstract windows: JudgmentWindows
+
+    abstract bucket: Bucket
+
     import = this.defineImport({
         beat: { name: EngineArchetypeDataName.Beat, type: Number },
         lane: { name: 'lane', type: Number },
@@ -52,6 +56,17 @@ export abstract class Note extends Archetype {
     y = this.entityMemory(Number)
 
     globalPreprocess() {
+        const toMs = ({ min, max }: JudgmentWindow) => ({
+            min: Math.round(min * 1000),
+            max: Math.round(max * 1000),
+        })
+
+        this.bucket.set({
+            perfect: toMs(this.windows.perfect),
+            great: toMs(this.windows.great),
+            good: toMs(this.windows.good),
+        })
+
         this.life.miss = -40
     }
 
@@ -74,6 +89,13 @@ export abstract class Note extends Archetype {
         }
 
         this.result.time = this.targetTime
+
+        if (!replay.isReplay) {
+            this.result.bucket.index = this.bucket.index
+        } else if (this.import.judgment) {
+            this.result.bucket.index = this.bucket.index
+            this.result.bucket.value = this.import.accuracy * 1000
+        }
     }
 
     spawnTime() {
