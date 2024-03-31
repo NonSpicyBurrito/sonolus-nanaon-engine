@@ -31,45 +31,29 @@ Package version.
 
 Partial engine information compatible with [sonolus-express](https://github.com/NonSpicyBurrito/sonolus-express).
 
-### `engineConfiguration`
+### `engineConfigurationPath`
 
-Engine Configuration.
+Path to Engine Configuration file.
 
--   `engineConfiguration.path`: path to file.
--   `engineConfiguration.buffer`: buffer of file.
--   `engineConfiguration.hash`: hash of file.
+### `enginePlayDataPath`
 
-### `enginePlayData`
+Path to Engine Play Data file.
 
-Engine Play Data.
+### `engineWatchDataPath`
 
--   `enginePlayData.path`: path to file.
--   `enginePlayData.buffer`: buffer of file.
--   `enginePlayData.hash`: hash of file.
+Path to Engine Watch Data file.
 
-### `enginePreviewData`
+### `enginePreviewDataPath`
 
-Engine Preview Data.
+Path to Engine Preview Data file.
 
--   `enginePreviewData.path`: path to file.
--   `enginePreviewData.buffer`: buffer of file.
--   `enginePreviewData.hash`: hash of file.
+### `engineTutorialDataPath`
 
-### `engineTutorialData`
+Path to Engine Tutorial Data file.
 
-Engine Tutorial Data.
+### `engineThumbnailPath`
 
--   `engineTutorialData.path`: path to file.
--   `engineTutorialData.buffer`: buffer of file.
--   `engineTutorialData.hash`: hash of file.
-
-### `engineThumbnail`
-
-Engine Thumbnail.
-
--   `engineThumbnail.path`: path to file.
--   `engineThumbnail.buffer`: buffer of file.
--   `engineThumbnail.hash`: hash of file.
+Path to Engine Thumbnail file.
 
 ### `noteDataToNC(noteData)`
 
