@@ -12,8 +12,8 @@ export const particle = defineParticle({
         flickNoteCircular: ParticleEffectName.NoteCircularAlternativeGreen,
         flickNoteLinear: ParticleEffectName.NoteLinearAlternativeGreen,
 
-        holdCircular: ParticleEffectName.NoteCircularHoldRed,
-        holdLinear: ParticleEffectName.NoteLinearHoldRed,
+        holdCircular: ParticleEffectName.NoteCircularHoldPurple,
+        holdLinear: ParticleEffectName.NoteLinearHoldPurple,
     },
 })
 
