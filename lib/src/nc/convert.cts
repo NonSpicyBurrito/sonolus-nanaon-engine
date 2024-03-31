@@ -83,11 +83,6 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
         sim: false,
     })
     append({
-        archetype: 'InputManager',
-        data: {},
-        sim: false,
-    })
-    append({
         archetype: 'Stage',
         data: {},
         sim: false,
