@@ -94,7 +94,7 @@ export class FlickNote extends Note {
             if (d >= 0.04 * flick.distance) {
                 this.complete(touch)
             } else if (touch.ended) {
-                this.despawn = true
+                this.incomplete(touch.t)
             }
             return
         }
@@ -103,6 +103,7 @@ export class FlickNote extends Note {
     complete(touch: Touch) {
         this.result.judgment = input.judge(touch.startTime, this.targetTime, this.windows)
         this.result.accuracy = touch.startTime - this.targetTime
+        this.export('accuracyDiff', time.now - touch.startTime)
 
         this.result.bucket.index = this.bucket.index
         this.result.bucket.value = this.result.accuracy * 1000

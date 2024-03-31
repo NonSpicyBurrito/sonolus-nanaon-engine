@@ -91,13 +91,13 @@ export class SlideEndFlickNote extends SlideNote {
                 if (time.now >= this.inputTime.min && this.hitbox.contains(touch.position)) {
                     this.activate(touch)
                 } else if (touch.ended) {
-                    this.despawn = true
+                    this.incomplete(touch.t)
                     this.endSlideEffects()
                 }
                 return
             }
 
-            this.despawn = true
+            this.incomplete(time.now)
             this.endSlideEffects()
             return
         }
@@ -129,7 +129,7 @@ export class SlideEndFlickNote extends SlideNote {
                 this.complete(touch)
                 this.endSlideEffects()
             } else if (touch.ended) {
-                this.despawn = true
+                this.incomplete(touch.t)
                 this.endSlideEffects()
             }
             return
@@ -139,6 +139,7 @@ export class SlideEndFlickNote extends SlideNote {
     complete(touch: Touch) {
         this.result.judgment = input.judge(touch.time, this.targetTime, this.windows)
         this.result.accuracy = touch.time - this.targetTime
+        this.export('accuracyDiff', time.now - touch.time)
 
         this.result.bucket.index = this.bucket.index
         this.result.bucket.value = this.result.accuracy * 1000

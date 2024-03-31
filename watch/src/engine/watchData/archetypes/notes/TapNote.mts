@@ -6,7 +6,11 @@ import { Note } from './Note.mjs'
 export class TapNote extends Note {
     sprite = skin.sprites.tapNote
 
-    clip = effect.clips.tapPerfect
+    clips = {
+        perfect: effect.clips.tapPerfect,
+        great: effect.clips.tapGreat,
+        good: effect.clips.tapGood,
+    }
 
     effects = {
         circular: particle.effects.tapNoteCircular,

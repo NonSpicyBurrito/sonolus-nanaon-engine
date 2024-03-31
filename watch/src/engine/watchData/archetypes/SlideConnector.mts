@@ -50,8 +50,11 @@ export class SlideConnector extends Archetype {
         this.visualTime.min = this.head.time - note.duration
 
         if (options.sfxEnabled) {
-            const id = effect.clips.hold.scheduleLoop(this.head.time)
-            effect.clips.scheduleStopLoop(id, this.tail.time)
+            if (replay.isReplay) {
+                this.scheduleReplaySFX()
+            } else {
+                this.scheduleSFX()
+            }
         }
     }
 
@@ -59,8 +62,15 @@ export class SlideConnector extends Archetype {
         return this.visualTime.min
     }
 
-    despawnTime() {
-        return this.tail.time
+    despawnTime(): number {
+        return replay.isReplay
+            ? Math.min(
+                  this.headImport.judgment
+                      ? this.tailSharedMemory.despawnTime
+                      : this.headSharedMemory.despawnTime,
+                  this.tail.time,
+              )
+            : this.tail.time
     }
 
     initialize() {
@@ -80,6 +90,8 @@ export class SlideConnector extends Archetype {
         }
 
         if (time.now < this.head.time) return
+
+        if (time.now < this.headSharedMemory.despawnTime) return
 
         if (this.shouldScheduleCircularEffect && !this.effectInstanceIds.circular)
             this.spawnCircularEffect()
@@ -104,8 +116,16 @@ export class SlideConnector extends Archetype {
         return archetypes.SlideStartNote.import.get(this.import.headRef)
     }
 
+    get headSharedMemory() {
+        return archetypes.TapNote.sharedMemory.get(this.import.headRef)
+    }
+
     get tailImport() {
         return archetypes.SlideStartNote.import.get(this.import.tailRef)
+    }
+
+    get tailSharedMemory() {
+        return archetypes.TapNote.sharedMemory.get(this.import.tailRef)
     }
 
     get shouldScheduleCircularEffect() {
@@ -131,6 +151,22 @@ export class SlideConnector extends Archetype {
             this.visualTime.hidden = this.tail.time - note.duration * options.hidden
 
         this.connector.z = getZ(layer.note.connector, this.head.time, this.headImport.lane)
+    }
+
+    scheduleSFX() {
+        const id = effect.clips.hold.scheduleLoop(this.head.time)
+        effect.clips.scheduleStopLoop(id, this.tail.time)
+    }
+
+    scheduleReplaySFX() {
+        if (!this.headImport.judgment) return
+
+        const start = Math.max(this.head.time, this.headSharedMemory.despawnTime)
+        const end = Math.min(this.tail.time, this.tailSharedMemory.despawnTime)
+        if (start >= end) return
+
+        const id = effect.clips.hold.scheduleLoop(start)
+        effect.clips.scheduleStopLoop(id, end)
     }
 
     renderConnector() {

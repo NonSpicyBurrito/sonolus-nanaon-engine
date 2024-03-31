@@ -35,6 +35,10 @@ export abstract class Note extends Archetype {
         lane: { name: 'lane', type: Number },
     })
 
+    export = this.defineExport({
+        accuracyDiff: { name: 'accuracyDiff', type: Number },
+    })
+
     targetTime = this.entityMemory(Number)
 
     spawnTime = this.entityMemory(Number)
@@ -156,6 +160,12 @@ export abstract class Note extends Archetype {
         this.y = approach(this.visualTime.min, this.visualTime.max, time.now)
 
         this.sprites.note.draw(this.layout.mul(this.y), this.z, 1)
+    }
+
+    incomplete(hitTime: number) {
+        this.export('accuracyDiff', hitTime - this.result.accuracy - this.targetTime)
+
+        this.despawn = true
     }
 
     playHitEffects() {

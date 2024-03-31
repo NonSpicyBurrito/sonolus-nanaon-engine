@@ -13,7 +13,11 @@ export abstract class Note extends Archetype {
 
     abstract sprite: SkinSprite
 
-    abstract clip: EffectClip
+    abstract clips: {
+        perfect: EffectClip
+        great: EffectClip
+        good: EffectClip
+    }
 
     abstract effects: {
         circular: ParticleEffect
@@ -23,6 +27,13 @@ export abstract class Note extends Archetype {
     import = this.defineImport({
         beat: { name: EngineArchetypeDataName.Beat, type: Number },
         lane: { name: 'lane', type: Number },
+        judgment: { name: EngineArchetypeDataName.Judgment, type: DataType<Judgment> },
+        accuracy: { name: EngineArchetypeDataName.Accuracy, type: Number },
+        accuracyDiff: { name: 'accuracyDiff', type: Number },
+    })
+
+    sharedMemory = this.defineSharedMemory({
+        despawnTime: Number,
     })
 
     initialized = this.entityMemory(Boolean)
@@ -50,9 +61,17 @@ export abstract class Note extends Archetype {
         this.visualTime.max = this.targetTime
         this.visualTime.min = this.visualTime.max - note.duration
 
+        this.sharedMemory.despawnTime = this.hitTime
+
         if (options.mirror) this.import.lane *= -1
 
-        if (options.sfxEnabled) this.scheduleSFX()
+        if (options.sfxEnabled) {
+            if (replay.isReplay) {
+                this.scheduleReplaySFX()
+            } else {
+                this.scheduleSFX()
+            }
+        }
 
         this.result.time = this.targetTime
     }
@@ -62,7 +81,7 @@ export abstract class Note extends Archetype {
     }
 
     despawnTime() {
-        return this.visualTime.max
+        return this.sharedMemory.despawnTime
     }
 
     initialize() {
@@ -84,6 +103,13 @@ export abstract class Note extends Archetype {
         this.despawnTerminate()
     }
 
+    get hitTime() {
+        return (
+            this.targetTime +
+            (replay.isReplay ? this.import.accuracy + this.import.accuracyDiff : 0)
+        )
+    }
+
     globalInitialize() {
         if (options.hidden > 0)
             this.visualTime.hidden = this.visualTime.max - note.duration * options.hidden
@@ -101,7 +127,23 @@ export abstract class Note extends Archetype {
     }
 
     scheduleSFX() {
-        this.clip.schedule(this.targetTime, sfxDistance)
+        this.clips.perfect.schedule(this.hitTime, sfxDistance)
+    }
+
+    scheduleReplaySFX() {
+        if (!this.import.judgment) return
+
+        switch (this.import.judgment) {
+            case Judgment.Perfect:
+                this.clips.perfect.schedule(this.hitTime, sfxDistance)
+                break
+            case Judgment.Great:
+                this.clips.great.schedule(this.hitTime, sfxDistance)
+                break
+            case Judgment.Good:
+                this.clips.good.schedule(this.hitTime, sfxDistance)
+                break
+        }
     }
 
     render() {
@@ -111,6 +153,8 @@ export abstract class Note extends Archetype {
     }
 
     despawnTerminate() {
+        if (replay.isReplay && !this.import.judgment) return
+
         if (options.noteEffectEnabled) this.playNoteEffects()
         if (options.laneEffectEnabled) this.playLaneEffects()
     }

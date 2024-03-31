@@ -54,7 +54,7 @@ export class SlideTickNote extends SlideNote {
                     this.complete(id, touch.t)
                     this.continueSlideEffects()
                 } else if (touch.ended) {
-                    this.despawn = true
+                    this.incomplete(touch.t)
                     this.endSlideEffects()
                 }
                 return
@@ -64,7 +64,7 @@ export class SlideTickNote extends SlideNote {
                 this.complete(id, time.now)
                 this.continueSlideEffects()
             } else {
-                this.despawn = true
+                this.incomplete(time.now)
                 this.endSlideEffects()
             }
             return

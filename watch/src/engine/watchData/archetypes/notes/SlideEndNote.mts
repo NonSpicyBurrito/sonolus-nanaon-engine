@@ -6,7 +6,11 @@ import { Note } from './Note.mjs'
 export class SlideEndNote extends Note {
     sprite = skin.sprites.slideEndNote
 
-    clip = effect.clips.tapPerfect
+    clips = {
+        perfect: effect.clips.tapPerfect,
+        great: effect.clips.tapGreat,
+        good: effect.clips.tapGood,
+    }
 
     effects = {
         circular: particle.effects.tapNoteCircular,
