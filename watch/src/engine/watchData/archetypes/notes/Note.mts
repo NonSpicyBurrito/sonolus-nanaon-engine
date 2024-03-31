@@ -20,7 +20,7 @@ export abstract class Note extends Archetype {
         linear: ParticleEffect
     }
 
-    data = this.defineData({
+    import = this.defineImport({
         beat: { name: EngineArchetypeDataName.Beat, type: Number },
         lane: { name: 'lane', type: Number },
     })
@@ -45,12 +45,12 @@ export abstract class Note extends Archetype {
     }
 
     preprocess() {
-        this.targetTime = bpmChanges.at(this.data.beat).time
+        this.targetTime = bpmChanges.at(this.import.beat).time
 
         this.visualTime.max = this.targetTime
         this.visualTime.min = this.visualTime.max - note.duration
 
-        if (options.mirror) this.data.lane *= -1
+        if (options.mirror) this.import.lane *= -1
 
         if (options.sfxEnabled) this.scheduleSFX()
 
@@ -92,12 +92,12 @@ export abstract class Note extends Archetype {
         const h = note.h * options.noteSize
 
         perspectiveLayout({
-            l: this.data.lane - w,
-            r: this.data.lane + w,
+            l: this.import.lane - w,
+            r: this.import.lane + w,
             t: 1 - h,
             b: 1 + h,
         }).copyTo(this.layout)
-        this.z = getZ(layer.note.body, this.targetTime, this.data.lane)
+        this.z = getZ(layer.note.body, this.targetTime, this.import.lane)
     }
 
     scheduleSFX() {
@@ -122,7 +122,7 @@ export abstract class Note extends Archetype {
 
     playLinearNoteEffect() {
         const layout = linearEffectLayout({
-            lane: this.data.lane,
+            lane: this.import.lane,
             size: 0.5,
         })
 
@@ -131,7 +131,7 @@ export abstract class Note extends Archetype {
 
     playCircularNoteEffect() {
         const layout = circularEffectLayout({
-            lane: this.data.lane,
+            lane: this.import.lane,
             w: 1.05,
             h: 0.7,
         })
@@ -142,8 +142,8 @@ export abstract class Note extends Archetype {
     playLaneEffects() {
         particle.effects.lane.spawn(
             perspectiveLayout({
-                l: this.data.lane - 0.5,
-                r: this.data.lane + 0.5,
+                l: this.import.lane - 0.5,
+                r: this.import.lane + 0.5,
                 b: lane.b,
                 t: lane.t,
             }),

@@ -1,4 +1,4 @@
-import { UnitText } from 'sonolus-core'
+import { Text } from 'sonolus-core'
 import { skin } from './skin.mjs'
 
 export const buckets = defineBuckets({
@@ -13,7 +13,7 @@ export const buckets = defineBuckets({
                 rotation: -90,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
     flickNote: {
         sprites: [
@@ -42,7 +42,7 @@ export const buckets = defineBuckets({
                 rotation: 180,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
     slideStartNote: {
         sprites: [
@@ -63,7 +63,7 @@ export const buckets = defineBuckets({
                 rotation: -90,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
     slideTickNote: {
         sprites: [
@@ -84,7 +84,7 @@ export const buckets = defineBuckets({
                 rotation: -90,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
     slideEndNote: {
         sprites: [
@@ -105,7 +105,7 @@ export const buckets = defineBuckets({
                 rotation: -90,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
     slideEndFlickNote: {
         sprites: [
@@ -142,6 +142,6 @@ export const buckets = defineBuckets({
                 rotation: 180,
             },
         ],
-        unit: UnitText.Millisecond,
+        unit: Text.MillisecondUnit,
     },
 })

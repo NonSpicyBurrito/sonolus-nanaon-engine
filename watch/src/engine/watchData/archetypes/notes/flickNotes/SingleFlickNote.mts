@@ -29,8 +29,8 @@ export abstract class SingleFlickNote extends Note {
         const t = b - h
 
         const gap = w * 0.75 * 0.5
-        const ml = this.data.lane - gap
-        const mr = this.data.lane + gap
+        const ml = this.import.lane - gap
+        const mr = this.import.lane + gap
 
         const l = ml - w
         const r = mr + w
@@ -38,7 +38,7 @@ export abstract class SingleFlickNote extends Note {
         leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
         rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
 
-        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.data.lane)
+        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.import.lane)
     }
 
     render() {

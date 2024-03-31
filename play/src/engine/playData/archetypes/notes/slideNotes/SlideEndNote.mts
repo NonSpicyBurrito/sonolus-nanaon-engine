@@ -29,7 +29,7 @@ export class SlideEndNote extends SlideNote {
         super.preprocess()
 
         const minPrevInputTime =
-            bpmChanges.at(this.prevData.beat).time + windows.minGood + input.offset
+            bpmChanges.at(this.prevImport.beat).time + windows.minGood + input.offset
 
         this.spawnTime = Math.min(this.spawnTime, minPrevInputTime)
     }

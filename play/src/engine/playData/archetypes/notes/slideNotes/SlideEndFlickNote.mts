@@ -44,7 +44,7 @@ export class SlideEndFlickNote extends SlideNote {
         super.preprocess()
 
         const minPrevInputTime =
-            bpmChanges.at(this.prevData.beat).time + windows.minGood + input.offset
+            bpmChanges.at(this.prevImport.beat).time + windows.minGood + input.offset
 
         this.spawnTime = Math.min(this.spawnTime, minPrevInputTime)
     }
@@ -59,8 +59,8 @@ export class SlideEndFlickNote extends SlideNote {
         const t = b - h
 
         const gap = w * 0.75 * 0.5
-        const ml = this.data.lane - gap
-        const mr = this.data.lane + gap
+        const ml = this.import.lane - gap
+        const mr = this.import.lane + gap
 
         const l = ml - w
         const r = mr + w
@@ -68,7 +68,7 @@ export class SlideEndFlickNote extends SlideNote {
         leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
         rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
 
-        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.data.lane)
+        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.import.lane)
     }
 
     touch() {

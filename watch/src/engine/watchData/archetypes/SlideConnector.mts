@@ -7,7 +7,7 @@ import { getZ, layer, skin } from '../skin.mjs'
 import { archetypes } from './index.mjs'
 
 export class SlideConnector extends Archetype {
-    data = this.defineData({
+    import = this.defineImport({
         headRef: { name: 'head', type: Number },
         tailRef: { name: 'tail', type: Number },
     })
@@ -44,8 +44,8 @@ export class SlideConnector extends Archetype {
     })
 
     preprocess() {
-        this.head.time = bpmChanges.at(this.headData.beat).time
-        this.tail.time = bpmChanges.at(this.tailData.beat).time
+        this.head.time = bpmChanges.at(this.headImport.beat).time
+        this.tail.time = bpmChanges.at(this.tailImport.beat).time
 
         this.visualTime.min = this.head.time - note.duration
 
@@ -100,12 +100,12 @@ export class SlideConnector extends Archetype {
             this.destroyLinearEffect()
     }
 
-    get headData() {
-        return archetypes.SlideStartNote.data.get(this.data.headRef)
+    get headImport() {
+        return archetypes.SlideStartNote.import.get(this.import.headRef)
     }
 
-    get tailData() {
-        return archetypes.SlideStartNote.data.get(this.data.tailRef)
+    get tailImport() {
+        return archetypes.SlideStartNote.import.get(this.import.tailRef)
     }
 
     get shouldScheduleCircularEffect() {
@@ -119,18 +119,18 @@ export class SlideConnector extends Archetype {
     globalInitialize() {
         const w = 0.5 * options.noteSize
 
-        this.head.lane = this.headData.lane
+        this.head.lane = this.headImport.lane
         this.head.l = this.head.lane - w
         this.head.r = this.head.lane + w
 
-        this.tail.lane = this.tailData.lane
+        this.tail.lane = this.tailImport.lane
         this.tail.l = this.tail.lane - w
         this.tail.r = this.tail.lane + w
 
         if (options.hidden > 0)
             this.visualTime.hidden = this.tail.time - note.duration * options.hidden
 
-        this.connector.z = getZ(layer.note.connector, this.head.time, this.headData.lane)
+        this.connector.z = getZ(layer.note.connector, this.head.time, this.headImport.lane)
     }
 
     renderConnector() {
