@@ -1,4 +1,4 @@
-import { EngineArchetypeDataName } from 'sonolus-core'
+import { EngineArchetypeDataName } from '@sonolus/core'
 import { lane } from '../../../../../../shared/src/engine/data/lane.mjs'
 import { approach } from '../../../../../../shared/src/engine/data/note.mjs'
 import { perspectiveLayout } from '../../../../../../shared/src/engine/data/utils.mjs'

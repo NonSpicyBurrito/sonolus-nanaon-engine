@@ -3,7 +3,7 @@ import {
     EngineArchetypeName,
     LevelData,
     LevelDataEntity,
-} from 'sonolus-core'
+} from '@sonolus/core'
 import { NC, NCBpmChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.cjs'
 
 type Intermediate = {
