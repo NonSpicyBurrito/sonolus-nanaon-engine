@@ -1,4 +1,5 @@
 import { leftRotated, rightRotated } from '../../../../../../../shared/src/engine/data/utils.mjs'
+import { windows } from '../../../../../../../shared/src/engine/data/windows.mjs'
 import { options } from '../../../../configuration/options.mjs'
 import { buckets } from '../../../buckets.mjs'
 import { effect } from '../../../effect.mjs'
@@ -6,7 +7,6 @@ import { flick } from '../../../flick.mjs'
 import { particle } from '../../../particle.mjs'
 import { scaledScreen } from '../../../scaledScreen.mjs'
 import { getZ, layer, skin } from '../../../skin.mjs'
-import { windows } from '../../../windows.mjs'
 import { SlideNote } from './SlideNote.mjs'
 
 export class SlideEndFlickNote extends SlideNote {
@@ -44,7 +44,7 @@ export class SlideEndFlickNote extends SlideNote {
         super.preprocess()
 
         const minPrevInputTime =
-            bpmChanges.at(this.prevData.beat).time + windows.minGood + input.offset
+            bpmChanges.at(this.prevImport.beat).time + windows.minGood + input.offset
 
         this.spawnTime = Math.min(this.spawnTime, minPrevInputTime)
     }
@@ -59,8 +59,8 @@ export class SlideEndFlickNote extends SlideNote {
         const t = b - h
 
         const gap = w * 0.75 * 0.5
-        const ml = this.data.lane - gap
-        const mr = this.data.lane + gap
+        const ml = this.import.lane - gap
+        const mr = this.import.lane + gap
 
         const l = ml - w
         const r = mr + w
@@ -68,7 +68,7 @@ export class SlideEndFlickNote extends SlideNote {
         leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
         rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
 
-        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.data.lane)
+        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.import.lane)
     }
 
     touch() {
@@ -91,13 +91,13 @@ export class SlideEndFlickNote extends SlideNote {
                 if (time.now >= this.inputTime.min && this.hitbox.contains(touch.position)) {
                     this.activate(touch)
                 } else if (touch.ended) {
-                    this.despawn = true
+                    this.incomplete(touch.t)
                     this.endSlideEffects()
                 }
                 return
             }
 
-            this.despawn = true
+            this.incomplete(time.now)
             this.endSlideEffects()
             return
         }
@@ -129,7 +129,7 @@ export class SlideEndFlickNote extends SlideNote {
                 this.complete(touch)
                 this.endSlideEffects()
             } else if (touch.ended) {
-                this.despawn = true
+                this.incomplete(touch.t)
                 this.endSlideEffects()
             }
             return
@@ -139,6 +139,7 @@ export class SlideEndFlickNote extends SlideNote {
     complete(touch: Touch) {
         this.result.judgment = input.judge(touch.time, this.targetTime, this.windows)
         this.result.accuracy = touch.time - this.targetTime
+        this.export('accuracyDiff', time.now - touch.time)
 
         this.result.bucket.index = this.bucket.index
         this.result.bucket.value = this.result.accuracy * 1000

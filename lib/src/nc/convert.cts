@@ -3,7 +3,7 @@ import {
     EngineArchetypeName,
     LevelData,
     LevelDataEntity,
-} from 'sonolus-core'
+} from '@sonolus/core'
 import { NC, NCBpmChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.cjs'
 
 type Intermediate = {
@@ -33,7 +33,7 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
         intermediateToRef.set(intermediate, ref)
 
         const entity = intermediateToEntity.get(intermediate)
-        if (entity) entity.ref = ref
+        if (entity) entity.name = ref
 
         return ref
     }
@@ -57,7 +57,7 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
         }
 
         const ref = intermediateToRef.get(intermediate)
-        if (ref) entity.ref = ref
+        if (ref) entity.name = ref
 
         intermediateToEntity.set(intermediate, entity)
         entities.push(entity)
@@ -79,11 +79,6 @@ export function ncToLevelData(nc: NC, offset = 0): LevelData {
 
     append({
         archetype: 'Initialization',
-        data: {},
-        sim: false,
-    })
-    append({
-        archetype: 'InputManager',
         data: {},
         sim: false,
     })

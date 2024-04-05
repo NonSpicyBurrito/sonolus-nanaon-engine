@@ -8,7 +8,7 @@ export abstract class SingleFlickNote extends Note {
     render() {
         const { time, pos } = super.render()
 
-        const z = getZ(layer.note.arrow, time, this.data.lane)
+        const z = getZ(layer.note.arrow, time, this.import.lane)
 
         const w = options.noteSize / 3
         const h = w * scaledScreen.wToH
@@ -17,8 +17,8 @@ export abstract class SingleFlickNote extends Note {
         const t = b + h
 
         const gap = w * 0.75 * 0.5
-        const ml = this.data.lane - gap
-        const mr = this.data.lane + gap
+        const ml = this.import.lane - gap
+        const mr = this.import.lane + gap
 
         const l = ml - w
         const r = mr + w

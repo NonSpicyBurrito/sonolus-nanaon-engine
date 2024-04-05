@@ -4,15 +4,15 @@ import { getZ, layer, skin } from '../skin.mjs'
 import { archetypes } from './index.mjs'
 
 export class SlideConnector extends Archetype {
-    data = this.defineData({
+    import = this.defineImport({
         headRef: { name: 'head', type: Number },
         tailRef: { name: 'tail', type: Number },
     })
 
     render() {
         const t = {
-            min: bpmChanges.at(this.headData.beat).time,
-            max: bpmChanges.at(this.tailData.beat).time,
+            min: bpmChanges.at(this.headImport.beat).time,
+            max: bpmChanges.at(this.tailImport.beat).time,
         }
 
         const index = {
@@ -21,11 +21,11 @@ export class SlideConnector extends Archetype {
         }
 
         const lane = {
-            min: this.headData.lane,
-            max: this.tailData.lane,
+            min: this.headImport.lane,
+            max: this.tailImport.lane,
         }
 
-        const z = getZ(layer.note.connector, t.min, this.headData.lane)
+        const z = getZ(layer.note.connector, t.min, this.headImport.lane)
 
         for (let i = index.min; i <= index.max; i++) {
             const x = i * panel.w
@@ -56,11 +56,11 @@ export class SlideConnector extends Archetype {
         }
     }
 
-    get headData() {
-        return archetypes.SlideStartNote.data.get(this.data.headRef)
+    get headImport() {
+        return archetypes.SlideStartNote.import.get(this.import.headRef)
     }
 
-    get tailData() {
-        return archetypes.SlideStartNote.data.get(this.data.tailRef)
+    get tailImport() {
+        return archetypes.SlideStartNote.import.get(this.import.tailRef)
     }
 }

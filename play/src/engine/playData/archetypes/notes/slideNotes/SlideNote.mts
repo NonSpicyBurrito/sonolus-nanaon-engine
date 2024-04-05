@@ -4,7 +4,7 @@ import { circularEffectLayout, linearEffectLayout, particle } from '../../../par
 import { Note } from '../Note.mjs'
 
 export abstract class SlideNote extends Note {
-    slideData = this.defineData({
+    slideImport = this.defineImport({
         prevRef: { name: 'prev', type: Number },
     })
 
@@ -18,15 +18,15 @@ export abstract class SlideNote extends Note {
     })
 
     get prevInfo() {
-        return entityInfos.get(this.slideData.prevRef)
+        return entityInfos.get(this.slideImport.prevRef)
     }
 
-    get prevData() {
-        return this.data.get(this.slideData.prevRef)
+    get prevImport() {
+        return this.import.get(this.slideImport.prevRef)
     }
 
     get prevSharedMemory() {
-        return this.sharedMemory.get(this.slideData.prevRef)
+        return this.sharedMemory.get(this.slideImport.prevRef)
     }
 
     get shouldPlayHoldSFX() {
@@ -69,11 +69,13 @@ export abstract class SlideNote extends Note {
 
         if (this.shouldPlayCircularHoldEffect)
             this.sharedMemory.effectInstanceIds.circular = this.spawnCircularHoldEffect(
-                this.data.lane,
+                this.import.lane,
             )
 
         if (this.shouldPlayLinearHoldEffect)
-            this.sharedMemory.effectInstanceIds.linear = this.spawnLinearHoldEffect(this.data.lane)
+            this.sharedMemory.effectInstanceIds.linear = this.spawnLinearHoldEffect(
+                this.import.lane,
+            )
     }
 
     continueSlideEffects() {

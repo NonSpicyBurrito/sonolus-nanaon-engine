@@ -7,7 +7,7 @@ import { getZ, layer, skin } from '../skin.mjs'
 import { archetypes } from './index.mjs'
 
 export class SlideConnector extends Archetype {
-    data = this.defineData({
+    import = this.defineImport({
         headRef: { name: 'head', type: Number },
         tailRef: { name: 'tail', type: Number },
     })
@@ -44,14 +44,17 @@ export class SlideConnector extends Archetype {
     })
 
     preprocess() {
-        this.head.time = bpmChanges.at(this.headData.beat).time
-        this.tail.time = bpmChanges.at(this.tailData.beat).time
+        this.head.time = bpmChanges.at(this.headImport.beat).time
+        this.tail.time = bpmChanges.at(this.tailImport.beat).time
 
         this.visualTime.min = this.head.time - note.duration
 
         if (options.sfxEnabled) {
-            const id = effect.clips.hold.scheduleLoop(this.head.time)
-            effect.clips.scheduleStopLoop(id, this.tail.time)
+            if (replay.isReplay) {
+                this.scheduleReplaySFX()
+            } else {
+                this.scheduleSFX()
+            }
         }
     }
 
@@ -59,8 +62,15 @@ export class SlideConnector extends Archetype {
         return this.visualTime.min
     }
 
-    despawnTime() {
-        return this.tail.time
+    despawnTime(): number {
+        return replay.isReplay
+            ? Math.min(
+                  this.headImport.judgment
+                      ? this.tailSharedMemory.despawnTime
+                      : this.headSharedMemory.despawnTime,
+                  this.tail.time,
+              )
+            : this.tail.time
     }
 
     initialize() {
@@ -81,6 +91,8 @@ export class SlideConnector extends Archetype {
 
         if (time.now < this.head.time) return
 
+        if (time.now < this.headSharedMemory.despawnTime) return
+
         if (this.shouldScheduleCircularEffect && !this.effectInstanceIds.circular)
             this.spawnCircularEffect()
 
@@ -100,12 +112,20 @@ export class SlideConnector extends Archetype {
             this.destroyLinearEffect()
     }
 
-    get headData() {
-        return archetypes.SlideStartNote.data.get(this.data.headRef)
+    get headImport() {
+        return archetypes.SlideStartNote.import.get(this.import.headRef)
     }
 
-    get tailData() {
-        return archetypes.SlideStartNote.data.get(this.data.tailRef)
+    get headSharedMemory() {
+        return archetypes.TapNote.sharedMemory.get(this.import.headRef)
+    }
+
+    get tailImport() {
+        return archetypes.SlideStartNote.import.get(this.import.tailRef)
+    }
+
+    get tailSharedMemory() {
+        return archetypes.TapNote.sharedMemory.get(this.import.tailRef)
     }
 
     get shouldScheduleCircularEffect() {
@@ -119,18 +139,34 @@ export class SlideConnector extends Archetype {
     globalInitialize() {
         const w = 0.5 * options.noteSize
 
-        this.head.lane = this.headData.lane
+        this.head.lane = this.headImport.lane
         this.head.l = this.head.lane - w
         this.head.r = this.head.lane + w
 
-        this.tail.lane = this.tailData.lane
+        this.tail.lane = this.tailImport.lane
         this.tail.l = this.tail.lane - w
         this.tail.r = this.tail.lane + w
 
         if (options.hidden > 0)
             this.visualTime.hidden = this.tail.time - note.duration * options.hidden
 
-        this.connector.z = getZ(layer.note.connector, this.head.time, this.headData.lane)
+        this.connector.z = getZ(layer.note.connector, this.head.time, this.headImport.lane)
+    }
+
+    scheduleSFX() {
+        const id = effect.clips.hold.scheduleLoop(this.head.time)
+        effect.clips.scheduleStopLoop(id, this.tail.time)
+    }
+
+    scheduleReplaySFX() {
+        if (!this.headImport.judgment) return
+
+        const start = Math.max(this.head.time, this.headSharedMemory.despawnTime)
+        const end = Math.min(this.tail.time, this.tailSharedMemory.despawnTime)
+        if (start >= end) return
+
+        const id = effect.clips.hold.scheduleLoop(start)
+        effect.clips.scheduleStopLoop(id, end)
     }
 
     renderConnector() {

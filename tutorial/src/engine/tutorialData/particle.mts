@@ -1,4 +1,4 @@
-import { ParticleEffectName } from 'sonolus-core'
+import { ParticleEffectName } from '@sonolus/core'
 import { lane } from '../../../../shared/src/engine/data/lane.mjs'
 import { perspectiveLayout } from '../../../../shared/src/engine/data/utils.mjs'
 import { scaledScreen } from './scaledScreen.mjs'
@@ -13,8 +13,8 @@ export const particle = defineParticle({
         flickNoteCircular: ParticleEffectName.NoteCircularAlternativeGreen,
         flickNoteLinear: ParticleEffectName.NoteLinearAlternativeGreen,
 
-        holdCircular: ParticleEffectName.NoteCircularHoldRed,
-        holdLinear: ParticleEffectName.NoteLinearHoldRed,
+        holdCircular: ParticleEffectName.NoteCircularHoldPurple,
+        holdLinear: ParticleEffectName.NoteLinearHoldPurple,
     },
 })
 

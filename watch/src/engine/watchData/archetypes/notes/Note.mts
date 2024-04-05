@@ -1,4 +1,4 @@
-import { EngineArchetypeDataName } from 'sonolus-core'
+import { EngineArchetypeDataName } from '@sonolus/core'
 import { lane } from '../../../../../../shared/src/engine/data/lane.mjs'
 import { approach } from '../../../../../../shared/src/engine/data/note.mjs'
 import { perspectiveLayout } from '../../../../../../shared/src/engine/data/utils.mjs'
@@ -13,16 +13,31 @@ export abstract class Note extends Archetype {
 
     abstract sprite: SkinSprite
 
-    abstract clip: EffectClip
+    abstract clips: {
+        perfect: EffectClip
+        great: EffectClip
+        good: EffectClip
+    }
 
     abstract effects: {
         circular: ParticleEffect
         linear: ParticleEffect
     }
 
-    data = this.defineData({
+    abstract windows: JudgmentWindows
+
+    abstract bucket: Bucket
+
+    import = this.defineImport({
         beat: { name: EngineArchetypeDataName.Beat, type: Number },
         lane: { name: 'lane', type: Number },
+        judgment: { name: EngineArchetypeDataName.Judgment, type: DataType<Judgment> },
+        accuracy: { name: EngineArchetypeDataName.Accuracy, type: Number },
+        accuracyDiff: { name: 'accuracyDiff', type: Number },
+    })
+
+    sharedMemory = this.defineSharedMemory({
+        despawnTime: Number,
     })
 
     initialized = this.entityMemory(Boolean)
@@ -41,20 +56,46 @@ export abstract class Note extends Archetype {
     y = this.entityMemory(Number)
 
     globalPreprocess() {
+        const toMs = ({ min, max }: JudgmentWindow) => ({
+            min: Math.round(min * 1000),
+            max: Math.round(max * 1000),
+        })
+
+        this.bucket.set({
+            perfect: toMs(this.windows.perfect),
+            great: toMs(this.windows.great),
+            good: toMs(this.windows.good),
+        })
+
         this.life.miss = -40
     }
 
     preprocess() {
-        this.targetTime = bpmChanges.at(this.data.beat).time
+        this.targetTime = bpmChanges.at(this.import.beat).time
 
         this.visualTime.max = this.targetTime
         this.visualTime.min = this.visualTime.max - note.duration
 
-        if (options.mirror) this.data.lane *= -1
+        this.sharedMemory.despawnTime = this.hitTime
 
-        if (options.sfxEnabled) this.scheduleSFX()
+        if (options.mirror) this.import.lane *= -1
+
+        if (options.sfxEnabled) {
+            if (replay.isReplay) {
+                this.scheduleReplaySFX()
+            } else {
+                this.scheduleSFX()
+            }
+        }
 
         this.result.time = this.targetTime
+
+        if (!replay.isReplay) {
+            this.result.bucket.index = this.bucket.index
+        } else if (this.import.judgment) {
+            this.result.bucket.index = this.bucket.index
+            this.result.bucket.value = this.import.accuracy * 1000
+        }
     }
 
     spawnTime() {
@@ -62,7 +103,7 @@ export abstract class Note extends Archetype {
     }
 
     despawnTime() {
-        return this.visualTime.max
+        return this.sharedMemory.despawnTime
     }
 
     initialize() {
@@ -84,6 +125,13 @@ export abstract class Note extends Archetype {
         this.despawnTerminate()
     }
 
+    get hitTime() {
+        return (
+            this.targetTime +
+            (replay.isReplay ? this.import.accuracy + this.import.accuracyDiff : 0)
+        )
+    }
+
     globalInitialize() {
         if (options.hidden > 0)
             this.visualTime.hidden = this.visualTime.max - note.duration * options.hidden
@@ -92,16 +140,32 @@ export abstract class Note extends Archetype {
         const h = note.h * options.noteSize
 
         perspectiveLayout({
-            l: this.data.lane - w,
-            r: this.data.lane + w,
+            l: this.import.lane - w,
+            r: this.import.lane + w,
             t: 1 - h,
             b: 1 + h,
         }).copyTo(this.layout)
-        this.z = getZ(layer.note.body, this.targetTime, this.data.lane)
+        this.z = getZ(layer.note.body, this.targetTime, this.import.lane)
     }
 
     scheduleSFX() {
-        this.clip.schedule(this.targetTime, sfxDistance)
+        this.clips.perfect.schedule(this.hitTime, sfxDistance)
+    }
+
+    scheduleReplaySFX() {
+        if (!this.import.judgment) return
+
+        switch (this.import.judgment) {
+            case Judgment.Perfect:
+                this.clips.perfect.schedule(this.hitTime, sfxDistance)
+                break
+            case Judgment.Great:
+                this.clips.great.schedule(this.hitTime, sfxDistance)
+                break
+            case Judgment.Good:
+                this.clips.good.schedule(this.hitTime, sfxDistance)
+                break
+        }
     }
 
     render() {
@@ -111,6 +175,8 @@ export abstract class Note extends Archetype {
     }
 
     despawnTerminate() {
+        if (replay.isReplay && !this.import.judgment) return
+
         if (options.noteEffectEnabled) this.playNoteEffects()
         if (options.laneEffectEnabled) this.playLaneEffects()
     }
@@ -122,7 +188,7 @@ export abstract class Note extends Archetype {
 
     playLinearNoteEffect() {
         const layout = linearEffectLayout({
-            lane: this.data.lane,
+            lane: this.import.lane,
             size: 0.5,
         })
 
@@ -131,7 +197,7 @@ export abstract class Note extends Archetype {
 
     playCircularNoteEffect() {
         const layout = circularEffectLayout({
-            lane: this.data.lane,
+            lane: this.import.lane,
             w: 1.05,
             h: 0.7,
         })
@@ -142,8 +208,8 @@ export abstract class Note extends Archetype {
     playLaneEffects() {
         particle.effects.lane.spawn(
             perspectiveLayout({
-                l: this.data.lane - 0.5,
-                r: this.data.lane + 0.5,
+                l: this.import.lane - 0.5,
+                r: this.import.lane + 0.5,
                 b: lane.b,
                 t: lane.t,
             }),

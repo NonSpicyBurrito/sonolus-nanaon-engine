@@ -1,8 +1,8 @@
+import { windows } from '../../../../../../../shared/src/engine/data/windows.mjs'
 import { buckets } from '../../../buckets.mjs'
 import { effect } from '../../../effect.mjs'
 import { particle } from '../../../particle.mjs'
 import { skin } from '../../../skin.mjs'
-import { windows } from '../../../windows.mjs'
 import { SlideNote } from './SlideNote.mjs'
 
 export class SlideTickNote extends SlideNote {
@@ -34,7 +34,7 @@ export class SlideTickNote extends SlideNote {
         super.preprocess()
 
         const minPrevInputTime =
-            bpmChanges.at(this.prevData.beat).time + windows.minGood + input.offset
+            bpmChanges.at(this.prevImport.beat).time + windows.minGood + input.offset
 
         this.spawnTime = Math.min(this.spawnTime, minPrevInputTime)
     }
@@ -54,7 +54,7 @@ export class SlideTickNote extends SlideNote {
                     this.complete(id, touch.t)
                     this.continueSlideEffects()
                 } else if (touch.ended) {
-                    this.despawn = true
+                    this.incomplete(touch.t)
                     this.endSlideEffects()
                 }
                 return
@@ -64,7 +64,7 @@ export class SlideTickNote extends SlideNote {
                 this.complete(id, time.now)
                 this.continueSlideEffects()
             } else {
-                this.despawn = true
+                this.incomplete(time.now)
                 this.endSlideEffects()
             }
             return
