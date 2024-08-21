@@ -1,6 +1,6 @@
 import { approach } from '../../../../../shared/src/engine/data/note.mjs'
 import { options } from '../../configuration/options.mjs'
-import { effect, getScheduleSFXTime } from '../effect.mjs'
+import { effect } from '../effect.mjs'
 import { note } from '../note.mjs'
 import { circularEffectLayout, linearEffectLayout, particle } from '../particle.mjs'
 import { getZ, layer, skin } from '../skin.mjs'
@@ -27,8 +27,6 @@ export class SlideConnector extends Archetype {
         r: Number,
     })
 
-    scheduleSFXTime = this.entityMemory(Number)
-
     visualTime = this.entityMemory({
         min: Number,
         hidden: Number,
@@ -36,20 +34,19 @@ export class SlideConnector extends Archetype {
 
     spawnTime = this.entityMemory(Number)
 
-    hasSFXScheduled = this.entityMemory(Boolean)
-
     connector = this.entityMemory({
         z: Number,
     })
 
     preprocess() {
         this.head.time = bpmChanges.at(this.headImport.beat).time
-
-        this.scheduleSFXTime = getScheduleSFXTime(this.head.time)
+        this.tail.time = bpmChanges.at(this.tailImport.beat).time
 
         this.visualTime.min = this.head.time - note.duration
 
-        this.spawnTime = Math.min(this.visualTime.min, this.scheduleSFXTime)
+        this.spawnTime = this.visualTime.min
+
+        if (this.shouldScheduleSFX) this.scheduleSFX()
     }
 
     spawnOrder() {
@@ -67,7 +64,6 @@ export class SlideConnector extends Archetype {
         this.head.l = this.head.lane - w
         this.head.r = this.head.lane + w
 
-        this.tail.time = bpmChanges.at(this.tailImport.beat).time
         this.tail.lane = this.tailImport.lane
         this.tail.l = this.tail.lane - w
         this.tail.r = this.tail.lane + w
@@ -88,9 +84,6 @@ export class SlideConnector extends Archetype {
             this.despawn = true
             return
         }
-
-        if (this.shouldScheduleSFX && !this.hasSFXScheduled && time.now >= this.scheduleSFXTime)
-            this.scheduleSFX()
 
         if (time.now < this.visualTime.min) return
 
@@ -136,8 +129,6 @@ export class SlideConnector extends Archetype {
     scheduleSFX() {
         const id = effect.clips.hold.scheduleLoop(this.head.time)
         effect.clips.scheduleStopLoop(id, this.tail.time)
-
-        this.hasSFXScheduled = true
     }
 
     renderConnector() {
