@@ -1,6 +1,7 @@
 import { EngineArchetypeDataName } from '@sonolus/core'
 import { approach } from '../../../../../../shared/src/engine/data/note.mjs'
 import { perspectiveLayout } from '../../../../../../shared/src/engine/data/utils.mjs'
+import { toBucketWindows, Windows } from '../../../../../../shared/src/engine/data/windows.mjs'
 import { options } from '../../../configuration/options.mjs'
 import { sfxDistance } from '../../effect.mjs'
 import { getHitbox, lane } from '../../lane.mjs'
@@ -26,7 +27,7 @@ export abstract class Note extends Archetype {
         linear: ParticleEffect
     }
 
-    abstract windows: JudgmentWindows
+    abstract windows: Windows
 
     abstract bucket: Bucket
 
@@ -45,16 +46,10 @@ export abstract class Note extends Archetype {
 
     hitbox = this.entityMemory(Rect)
 
-    visualTime = this.entityMemory({
-        min: Number,
-        max: Number,
-        hidden: Number,
-    })
+    visualTime = this.entityMemory(Range)
+    hiddenTime = this.entityMemory(Number)
 
-    inputTime = this.entityMemory({
-        min: Number,
-        max: Number,
-    })
+    inputTime = this.entityMemory(Range)
 
     layout = this.entityMemory(Quad)
     z = this.entityMemory(Number)
@@ -62,16 +57,7 @@ export abstract class Note extends Archetype {
     y = this.entityMemory(Number)
 
     globalPreprocess() {
-        const toMs = ({ min, max }: RangeLike) => ({
-            min: Math.round(min * 1000),
-            max: Math.round(max * 1000),
-        })
-
-        this.bucket.set({
-            perfect: toMs(this.windows.perfect),
-            great: toMs(this.windows.great),
-            good: toMs(this.windows.good),
-        })
+        this.bucket.set(toBucketWindows(this.windows))
 
         this.life.miss = -40
     }
@@ -79,10 +65,9 @@ export abstract class Note extends Archetype {
     preprocess() {
         this.targetTime = bpmChanges.at(this.import.beat).time
 
-        this.visualTime.max = this.targetTime
-        this.visualTime.min = this.visualTime.max - note.duration
+        this.visualTime.copyFrom(Range.l.mul(note.duration).add(this.targetTime))
 
-        this.inputTime.min = this.targetTime + this.windows.good.min + input.offset
+        this.inputTime.copyFrom(this.windows.good.add(this.targetTime).add(input.offset))
 
         this.spawnTime = Math.min(this.visualTime.min, this.inputTime.min)
 
@@ -101,9 +86,7 @@ export abstract class Note extends Archetype {
 
     initialize() {
         if (options.hidden > 0)
-            this.visualTime.hidden = this.visualTime.max - note.duration * options.hidden
-
-        this.inputTime.max = this.targetTime + this.windows.good.max + input.offset
+            this.hiddenTime = this.visualTime.max - note.duration * options.hidden
 
         const w = 0.5 * options.noteSize
         const h = note.h * options.noteSize
@@ -131,7 +114,7 @@ export abstract class Note extends Archetype {
         if (this.despawn) return
 
         if (time.now < this.visualTime.min) return
-        if (options.hidden > 0 && time.now > this.visualTime.hidden) return
+        if (options.hidden > 0 && time.now > this.hiddenTime) return
 
         this.render()
     }
