@@ -4,8 +4,8 @@ A recreation of 22/7 Music Time engine in [Sonolus](https://sonolus.com).
 
 ## Links
 
--   [Sonolus Website](https://sonolus.com)
--   [Sonolus Wiki](https://github.com/NonSpicyBurrito/sonolus-wiki)
+- [Sonolus Website](https://sonolus.com)
+- [Sonolus Wiki](https://github.com/NonSpicyBurrito/sonolus-wiki)
 
 ## Installation
 
@@ -59,11 +59,11 @@ Path to Engine Thumbnail file.
 
 Converts note data to NC (Nanaon Chart).
 
--   `noteData`: note data.
+- `noteData`: note data.
 
 ### `ncToLevelData(nc, offset?)`
 
 Converts NC (Nanaon Chart) to Level Data.
 
--   `nc`: Nanaon Chart.
--   `offset`: offset (default: `0`).
+- `nc`: Nanaon Chart.
+- `offset`: offset (default: `0`).
