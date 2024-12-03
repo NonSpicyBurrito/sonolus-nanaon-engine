@@ -13,7 +13,7 @@ export const noteDataToNC = (noteData: NoteData): NC => {
     const idToSlide = new Map<number, NCSlideNote>()
 
     for (const note of noteData.m_NoteList) {
-        if (!note.m_Time) continue
+        if (note.m_Id === 1) continue
 
         if (note.m_ParentId) {
             const connection: NCConnectionNote = {
