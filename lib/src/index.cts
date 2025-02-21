@@ -9,7 +9,7 @@ export const version = '1.5.1'
 
 export const databaseEngineItem = {
     name: 'nanaon',
-    version: 12,
+    version: 13,
     title: {
         en: '22/7',
     },
