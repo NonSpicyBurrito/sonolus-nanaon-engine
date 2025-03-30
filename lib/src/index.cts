@@ -20,7 +20,7 @@ export const databaseEngineItem = {
         zht: '22/7 音樂的時間',
     },
     author: {
-        en: 'Burrito',
+        en: 'Burrito#1000',
     },
     description: {
         en: [
