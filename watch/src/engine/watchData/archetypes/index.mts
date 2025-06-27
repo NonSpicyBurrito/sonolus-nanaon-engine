@@ -1,3 +1,4 @@
+import { EmptyEffect } from './EmptyEffect.mjs'
 import { Initialization } from './Initialization.mjs'
 import { SimLine } from './SimLine.mjs'
 import { SlideConnector } from './SlideConnector.mjs'
@@ -13,6 +14,7 @@ export const archetypes = defineArchetypes({
     Initialization,
 
     Stage,
+    EmptyEffect,
 
     TapNote,
     FlickNote,
