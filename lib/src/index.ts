@@ -5,7 +5,7 @@ export * from './nc/index.js'
 export { noteDataToNC } from './noteData/convert.js'
 export * from './noteData/index.js'
 
-export const version = '1.5.4'
+export const version = '1.6.0'
 
 export const databaseEngineItem = {
     name: 'nanaon',
