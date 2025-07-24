@@ -55,4 +55,4 @@ The following assets are exposed as package entry points:
 - `EngineTutorialData`
 - `EngineThumbnail`
 
-In Node.js, you can obtain path to assets using `require.resolve('sonolus-nanaon-engine/EngineConfiguration')` or `import.meta.resolve('sonolus-nanaon-engine/EngineConfiguration')`.
+In Node.js, you can obtain path to assets using `import.meta.resolve('sonolus-nanaon-engine/EngineConfiguration')`.
