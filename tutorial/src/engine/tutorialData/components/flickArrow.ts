@@ -32,7 +32,7 @@ export const flickArrow = {
 
             const gap = w * 0.75 * 0.5
             const ml = -gap
-            const mr = +gap
+            const mr = gap
 
             const l = ml - w
             const r = mr + w
@@ -53,7 +53,7 @@ export const flickArrow = {
 
             const gap = w * 0.75 * 0.5
             const ml = -gap
-            const mr = +gap
+            const mr = gap
 
             const l = ml - w
             const r = mr + w
