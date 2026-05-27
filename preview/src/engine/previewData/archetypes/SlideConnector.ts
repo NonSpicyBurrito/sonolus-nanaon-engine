@@ -1,6 +1,6 @@
 import { options } from '../../configuration/options.js'
 import { panel } from '../panel.js'
-import { getZ, layer, skin } from '../skin.js'
+import { layer, skin } from '../skin.js'
 import { archetypes } from './index.js'
 
 export class SlideConnector extends Archetype {
@@ -24,8 +24,6 @@ export class SlideConnector extends Archetype {
             min: this.headImport.lane,
             max: this.tailImport.lane,
         }
-
-        const z = getZ(layer.note.connector, t.min, this.headImport.lane)
 
         for (let i = index.min; i <= index.max; i++) {
             const x = i * panel.w
@@ -52,7 +50,11 @@ export class SlideConnector extends Archetype {
                 p4: pos.min.translate(pl.min + 0.5 * options.noteSize, 0),
             })
 
-            skin.sprites.connector.draw(layout, z, options.connectorAlpha)
+            skin.sprites.connector.draw(
+                layout,
+                [layer.note.connector, -t.min, -lane.min],
+                options.connectorAlpha,
+            )
         }
     }
 
