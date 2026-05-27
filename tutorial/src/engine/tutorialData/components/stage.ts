@@ -37,7 +37,7 @@ export const stage = {
             b: 1,
         })
 
-        sprites.stage.draw(layout, layer.stage, 1)
+        sprites.stage.draw(layout, [layer.stage], 1)
     },
 
     drawFallbackStage() {
@@ -49,7 +49,7 @@ export const stage = {
                 b: 1,
             })
 
-            skin.sprites.lane.draw(layout, layer.stage, 1)
+            skin.sprites.lane.draw(layout, [layer.stage], 1)
         }
     },
 
@@ -61,7 +61,7 @@ export const stage = {
             b: 1 + note.h,
         })
 
-        skin.sprites.judgmentLine.draw(layout, layer.judgmentLine, 1)
+        skin.sprites.judgmentLine.draw(layout, [layer.judgmentLine], 1)
     },
 
     drawSlots() {
@@ -73,7 +73,7 @@ export const stage = {
                 b: 1 + note.h,
             })
 
-            skin.sprites.slot.draw(layout, layer.slot, 1)
+            skin.sprites.slot.draw(layout, [layer.slot], 1)
         }
     },
 }

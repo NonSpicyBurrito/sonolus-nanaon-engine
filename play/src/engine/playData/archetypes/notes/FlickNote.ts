@@ -6,7 +6,7 @@ import { effect } from '../../effect.js'
 import { flick } from '../../flick.js'
 import { particle } from '../../particle.js'
 import { scaledScreen } from '../../scaledScreen.js'
-import { getZ, layer, skin } from '../../skin.js'
+import { layer, skin } from '../../skin.js'
 import { isUsed, markAsUsed } from '../InputManager.js'
 import { Note } from './Note.js'
 
@@ -33,7 +33,6 @@ export class FlickNote extends Note {
 
     arrow = this.entityMemory({
         layouts: [Quad, Quad],
-        z: Number,
     })
 
     activatedTouchId = this.entityMemory(TouchId)
@@ -56,8 +55,6 @@ export class FlickNote extends Note {
 
         leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
         rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
-
-        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.import.lane)
     }
 
     touch() {
@@ -117,7 +114,11 @@ export class FlickNote extends Note {
         super.render()
 
         for (const layout of this.arrow.layouts) {
-            this.sprites.arrow.draw(layout.mul(this.y), this.arrow.z, 1)
+            this.sprites.arrow.draw(
+                layout.mul(this.y),
+                [layer.note.arrow, -this.targetTime, -this.import.lane],
+                1,
+            )
         }
     }
 }

@@ -100,9 +100,9 @@ export class Stage extends Archetype {
             })
 
             if (i % 2 === 1) {
-                skin.sprites.laneAlternative.draw(layout, layer.stage, 1)
+                skin.sprites.laneAlternative.draw(layout, [layer.stage], 1)
             } else {
-                skin.sprites.lane.draw(layout, layer.stage, 1)
+                skin.sprites.lane.draw(layout, [layer.stage], 1)
             }
         }
     }
@@ -115,7 +115,7 @@ export class Stage extends Archetype {
             b: 1,
         })
 
-        skin.sprites.nanaonStage.draw(layout, layer.stage, 1)
+        skin.sprites.nanaonStage.draw(layout, [layer.stage], 1)
     }
 
     drawSlots() {
@@ -127,7 +127,7 @@ export class Stage extends Archetype {
                 b: 1 + note.h,
             })
 
-            skin.sprites.slot.draw(layout, layer.slot, 1)
+            skin.sprites.slot.draw(layout, [layer.slot], 1)
         }
     }
 
@@ -139,7 +139,7 @@ export class Stage extends Archetype {
             b: 1 + note.h,
         })
 
-        skin.sprites.judgmentLine.draw(layout, layer.judgmentLine, 1)
+        skin.sprites.judgmentLine.draw(layout, [layer.judgmentLine], 1)
     }
 
     drawStageCover() {
@@ -152,7 +152,7 @@ export class Stage extends Archetype {
                 t: scaledScreen.t,
                 b: Math.lerp(lane.t, 1, options.stageCover),
             }),
-            layer.cover,
+            [layer.cover],
             1,
         )
     }

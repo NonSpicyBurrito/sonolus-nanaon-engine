@@ -7,7 +7,7 @@ import { sfxDistance } from '../../effect.js'
 import { getHitbox, lane } from '../../lane.js'
 import { note } from '../../note.js'
 import { circularEffectLayout, linearEffectLayout, particle } from '../../particle.js'
-import { getZ, layer } from '../../skin.js'
+import { layer } from '../../skin.js'
 
 export abstract class Note extends Archetype {
     hasInput = true
@@ -52,7 +52,6 @@ export abstract class Note extends Archetype {
     inputTime = this.entityMemory(Range)
 
     layout = this.entityMemory(Quad)
-    z = this.entityMemory(Number)
 
     y = this.entityMemory(Number)
 
@@ -97,7 +96,6 @@ export abstract class Note extends Archetype {
             t: 1 - h,
             b: 1 + h,
         }).copyTo(this.layout)
-        this.z = getZ(layer.note.body, this.targetTime, this.import.lane)
 
         getHitbox({
             l: this.import.lane,
@@ -134,7 +132,11 @@ export abstract class Note extends Archetype {
     render() {
         this.y = approach(this.visualTime.min, this.visualTime.max, time.now)
 
-        this.sprites.note.draw(this.layout.mul(this.y), this.z, 1)
+        this.sprites.note.draw(
+            this.layout.mul(this.y),
+            [layer.note.body, -this.targetTime, -this.import.lane],
+            1,
+        )
     }
 
     incomplete(hitTime: number) {

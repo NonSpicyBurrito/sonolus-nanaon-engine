@@ -3,7 +3,7 @@ import { options } from '../../../../configuration/options.js'
 import { effect } from '../../../effect.js'
 import { particle } from '../../../particle.js'
 import { scaledScreen } from '../../../scaledScreen.js'
-import { getZ, layer, skin } from '../../../skin.js'
+import { layer, skin } from '../../../skin.js'
 import { Note } from '../Note.js'
 
 export abstract class SingleFlickNote extends Note {
@@ -20,7 +20,6 @@ export abstract class SingleFlickNote extends Note {
 
     arrow = this.entityMemory({
         layouts: [Quad, Quad],
-        z: Number,
     })
 
     globalInitialize() {
@@ -41,15 +40,17 @@ export abstract class SingleFlickNote extends Note {
 
         leftRotated({ l, r: ml, b, t }).copyTo(this.arrow.layouts[0])
         rightRotated({ l: mr, r, b, t }).copyTo(this.arrow.layouts[1])
-
-        this.arrow.z = getZ(layer.note.arrow, this.targetTime, this.import.lane)
     }
 
     render() {
         super.render()
 
         for (const layout of this.arrow.layouts) {
-            skin.sprites.flickArrow.draw(layout.mul(this.y), this.arrow.z, 1)
+            skin.sprites.flickArrow.draw(
+                layout.mul(this.y),
+                [layer.note.arrow, -this.targetTime, -this.import.lane],
+                1,
+            )
         }
     }
 }

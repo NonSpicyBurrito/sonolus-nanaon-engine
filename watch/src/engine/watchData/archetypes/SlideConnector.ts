@@ -3,7 +3,7 @@ import { options } from '../../configuration/options.js'
 import { effect } from '../effect.js'
 import { note } from '../note.js'
 import { circularEffectLayout, linearEffectLayout, particle } from '../particle.js'
-import { getZ, layer, skin } from '../skin.js'
+import { layer, skin } from '../skin.js'
 import { archetypes } from './index.js'
 
 export class SlideConnector extends Archetype {
@@ -33,10 +33,6 @@ export class SlideConnector extends Archetype {
         min: Number,
     })
     hiddenTime = this.entityMemory(Number)
-
-    connector = this.entityMemory({
-        z: Number,
-    })
 
     effectInstanceIds = this.entityMemory({
         circular: ParticleEffectInstanceId,
@@ -148,8 +144,6 @@ export class SlideConnector extends Archetype {
         this.tail.r = this.tail.lane + w
 
         if (options.hidden > 0) this.hiddenTime = this.tail.time - note.duration * options.hidden
-
-        this.connector.z = getZ(layer.note.connector, this.head.time, this.headImport.lane)
     }
 
     scheduleSFX() {
@@ -204,7 +198,11 @@ export class SlideConnector extends Archetype {
             y4: y.min,
         }
 
-        skin.sprites.connector.draw(layout, this.connector.z, options.connectorAlpha)
+        skin.sprites.connector.draw(
+            layout,
+            [layer.note.connector, -this.head.time, -this.head.lane],
+            options.connectorAlpha,
+        )
     }
 
     spawnCircularEffect() {

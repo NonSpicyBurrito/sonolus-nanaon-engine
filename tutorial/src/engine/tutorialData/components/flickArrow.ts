@@ -40,8 +40,8 @@ export const flickArrow = {
             const left = leftRotated({ l, r: ml, b, t })
             const right = rightRotated({ l: mr, r, b, t })
 
-            sprites.arrow.draw(left, layer.note.arrow, a)
-            sprites.arrow.draw(right, layer.note.arrow, a)
+            sprites.arrow.draw(left, [layer.note.arrow], a)
+            sprites.arrow.draw(right, [layer.note.arrow], a)
         } else {
             const y = mode === Mode.Fall ? approach(0, 2, segment.time) : 1
 
@@ -61,8 +61,8 @@ export const flickArrow = {
             const left = leftRotated({ l, r: ml, b, t })
             const right = rightRotated({ l: mr, r, b, t })
 
-            sprites.arrow.draw(left.mul(y), layer.note.arrow, 1)
-            sprites.arrow.draw(right.mul(y), layer.note.arrow, 1)
+            sprites.arrow.draw(left.mul(y), [layer.note.arrow], 1)
+            sprites.arrow.draw(right.mul(y), [layer.note.arrow], 1)
         }
     },
 
