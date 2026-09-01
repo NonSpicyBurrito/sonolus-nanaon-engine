@@ -1,4 +1,5 @@
 import { EngineArchetypeDataName } from '@sonolus/core'
+
 import { approach } from '../../../../../../shared/src/engine/data/note.js'
 import { perspectiveLayout } from '../../../../../../shared/src/engine/data/utils.js'
 import { toBucketWindows, Windows } from '../../../../../../shared/src/engine/data/windows.js'
