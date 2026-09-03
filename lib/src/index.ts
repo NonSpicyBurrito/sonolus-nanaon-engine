@@ -5,7 +5,7 @@ export * from './nc/index.js'
 export { noteDataToNC } from './noteData/convert.js'
 export * from './noteData/index.js'
 
-export const version = '1.6.3'
+export const version = '1.6.4'
 
 export const engineFullName = {
     en: '22/7 Music Time',
