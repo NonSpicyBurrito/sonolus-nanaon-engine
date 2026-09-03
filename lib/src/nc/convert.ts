@@ -4,6 +4,7 @@ import {
     LevelData,
     LevelDataEntity,
 } from '@sonolus/core'
+
 import { NC, NCBpmChangeObject, NCObject, NCSingleNote, NCSlideNote } from './index.js'
 
 type Intermediate = {
